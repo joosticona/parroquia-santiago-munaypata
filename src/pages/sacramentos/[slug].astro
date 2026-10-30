@@ -1,0 +1,12 @@
+---
+import Layout from '../../components/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import {getAllContent} from '../../lib/db.js';
+const {settings,sacramentos}=getAllContent();
+const s=sacramentos.find(x=>x.id===Astro.params.slug);
+if(!s) return Astro.redirect('/sacramentos');
+---
+<Layout settings={settings} title={s.title} description={s.description}>
+<section class="detail-hero"><div class="container detail-head"><a href="/sacramentos" class="back-link"><Icon name="arrow-left" size={16}/> Volver a sacramentos</a><div class="detail-hero-grid"><div><p class="eyebrow light"><span class="eyebrow-line"></span> {s.tag}</p><h1>{s.title}</h1><p>{s.description}</p><div class="detail-hero-actions"><a class="btn btn-gold" href={`/inscripcion?para=${s.id}`}>Iniciar preinscripción <Icon name="arrow-up-right" size={17}/></a></div></div><div class="detail-symbol"><Icon name={s.icon} size={108} stroke={.9}/><span>✳</span></div></div></div></section>
+<section class="section"><div class="container detail-body"><div class="detail-main" data-reveal><p class="eyebrow"><span class="eyebrow-line"></span> SOBRE ESTE SACRAMENTO</p><h2>Un paso en tu <em>camino de fe.</em></h2><p class="long-copy">{s.detail}</p><h3>Orientación y requisitos</h3><p>La siguiente lista es orientativa y debe ser confirmada por la parroquia:</p><div class="requirements">{s.requirements?.map((r,i)=><div class="requirement"><span>{String(i+1).padStart(2,'0')}</span><p>{r}</p><Icon name="check" size={18}/></div>)}</div></div><aside class="detail-aside" data-reveal><div class="aside-card"><span class="aside-top-icon"><Icon name="calendar" size={26}/></span><p class="eyebrow">PREPARACIÓN</p><h3>{s.duration}</h3><p>Pregunta en secretaría por fechas y grupos disponibles.</p><hr/><p class="eyebrow">PREINSCRIPCIÓN</p><strong>{settings.registrationOpen&&s.open?'Disponible':'Por habilitar'}</strong><a href={`/inscripcion?para=${s.id}`} class="btn btn-primary full-btn">Ver formulario <Icon name="arrow-up-right" size={17}/></a></div><div class="aside-help"><Icon name="phone" size={19}/><div><strong>¿Tienes dudas?</strong><p>Estamos aquí para ayudarte.</p><a href="/contacto">Ir a contacto <Icon name="arrow" size={14}/></a></div></div></aside></div></section>
+</Layout>

@@ -1,0 +1,10 @@
+---
+import Icon from './Icon.astro';
+const {eyebrow,title,description,breadcrumb=''}=Astro.props;
+---
+<section class="page-hero"><div class="container page-hero-inner">
+  <div class="breadcrumbs"><a href="/">Inicio</a><Icon name="arrow" size={13}/><span>{breadcrumb||title}</span></div>
+  <p class="eyebrow light" data-reveal><span class="eyebrow-line"></span> {eyebrow}</p>
+  <h1 data-reveal>{title}</h1><p class="page-hero-description" data-reveal>{description}</p>
+  <div class="hero-ornament" aria-hidden="true"><span>✳</span></div>
+</div></section>

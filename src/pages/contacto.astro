@@ -1,0 +1,11 @@
+---
+import Layout from '../components/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import {getContent} from '../lib/db.js';
+const settings=getContent('settings');
+const mapLink='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('Parroquia Apóstol Santiago Munaypata La Paz Bolivia');
+---
+<Layout settings={settings} title="Contacto"><PageHero eyebrow="TE DAMOS LA BIENVENIDA" title="Estamos para escucharte" description="Si tienes preguntas sobre sacramentos, catequesis o actividades, queremos orientarte."/>
+<section class="section"><div class="container contact-grid"><div data-reveal><p class="eyebrow"><span class="eyebrow-line"></span> VISÍTANOS</p><h2>Siempre hay <em>un lugar para ti.</em></h2><p class="long-copy">{settings.about}</p><div class="contact-items"><div><span><Icon name="pin" size={24}/></span><div><h3>Encuéntranos</h3><p>{settings.address}</p></div></div><div><span><Icon name="phone" size={24}/></span><div><h3>Llámanos</h3><p>{settings.phone}</p></div></div><div><span><Icon name="clock" size={24}/></span><div><h3>Atención en secretaría</h3><p>{settings.officeHours}</p></div></div>{settings.email&&<div><span><Icon name="mail" size={24}/></span><div><h3>Correo electrónico</h3><p>{settings.email}</p></div></div>}</div><div class="contact-action-row"><a class="btn btn-primary" href={settings.facebook} target="_blank" rel="noopener noreferrer">Escríbenos en Facebook <Icon name="arrow-up-right" size={17}/></a><a class="btn btn-secondary" href={mapLink} target="_blank" rel="noopener noreferrer">Cómo llegar <Icon name="pin" size={17}/></a></div></div><div class="contact-visual" data-reveal><span class="contact-visual-label">MUNAYPATA · LA PAZ</span><img src="/templo-ilustracion.svg" alt="Ilustración de un templo"/><div class="contact-visual-bottom"><span>✳</span><strong>Te esperamos con los brazos abiertos.</strong></div></div></div></section>
+</Layout>

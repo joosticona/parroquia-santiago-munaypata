@@ -1,0 +1,12 @@
+---
+import Layout from '../components/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import {getAllContent} from '../lib/db.js';
+const {settings,avisos,eventos,galeria}=getAllContent();
+---
+<Layout settings={settings} title="Vida parroquial"><PageHero eyebrow="COMPARTIMOS LA FE" title="Vida parroquial" description="Un espacio para descubrir nuestros avisos, celebraciones, encuentros y momentos que nos unen."/>
+<section class="section"><div class="container"><div class="section-top" data-reveal><div><p class="eyebrow"><span class="eyebrow-line"></span> ÚLTIMAS NOVEDADES</p><h2>Noticias que <em>nos acercan.</em></h2></div></div><div class="notice-grid">{avisos.map(n=><article class="notice-card" data-reveal>{n.image&&<img src={n.image} alt={n.title} loading="lazy"/>}<div><span class="pill">{n.category}</span>{n.date&&<span class="notice-date">{n.date}</span>}<h3>{n.title}</h3><p>{n.description}</p>{n.document&&<a class="notice-document" href={n.document} target="_blank" rel="noopener noreferrer">Ver boletín en PDF <Icon name="external-link" size={16}/></a>}</div></article>)}{avisos.length===0&&<div class="empty-state">Todavía no hay avisos publicados.</div>}</div></div></section>
+<section class="section section-muted"><div class="container"><div class="section-top" data-reveal><div><p class="eyebrow"><span class="eyebrow-line"></span> PARTICIPA</p><h2>Próximos <em>encuentros.</em></h2></div></div><div class="event-grid">{eventos.map(e=><article class="event-card" data-reveal><span class="event-icon"><Icon name="calendar" size={25}/></span><div><small>{e.date||'Fecha por confirmar'} · {e.time||'Horario por confirmar'}</small><h3>{e.title}</h3><p>{e.description}</p><span class="event-place"><Icon name="pin" size={15}/> {e.place||'Parroquia'}</span></div></article>)}{eventos.length===0&&<div class="empty-state">Publicaremos los próximos encuentros muy pronto.</div>}</div></div></section>
+{galeria.length>0&&<section class="section"><div class="container"><div class="section-top"><div><p class="eyebrow"><span class="eyebrow-line"></span> MOMENTOS COMPARTIDOS</p><h2>Galería <em>comunitaria.</em></h2></div></div><div class="gallery-grid">{galeria.filter(x=>x.image).map(g=><figure data-reveal><img src={g.image} alt={g.title} loading="lazy"/><figcaption>{g.title}</figcaption></figure>)}</div></div></section>}
+</Layout>

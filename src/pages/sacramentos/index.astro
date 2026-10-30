@@ -1,0 +1,12 @@
+---
+import Layout from '../../components/Layout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SacramentCard from '../../components/SacramentCard.astro';
+import Icon from '../../components/Icon.astro';
+import {getAllContent} from '../../lib/db.js';
+const {settings,sacramentos}=getAllContent();
+---
+<Layout settings={settings} title="Nuestros sacramentos"><PageHero eyebrow="UN CAMINO EN LA FE" title="Sacramentos" description="Cada sacramento es una oportunidad de encontrar a Dios. Descubre cómo podemos acompañarte en cada etapa."/>
+<section class="section"><div class="container"><div class="section-top" data-reveal><div><p class="eyebrow"><span class="eyebrow-line"></span> TE ACOMPAÑAMOS</p><h2>Crecemos <em>en comunidad.</em></h2></div><p class="section-aside">Elige el sacramento sobre el que deseas conocer los pasos, preparación y requisitos.</p></div><div class="sacrament-grid sacrament-grid-page">{sacramentos.map((s,i)=><SacramentCard sacrament={s} index={i}/>)}</div></div></section>
+<section class="section note-section"><div class="container note-grid"><Icon name="circle-help" size={33}/><div><h3>¿Buscas Reconciliación o Unción de los Enfermos?</h3><p>Estos sacramentos no se gestionan mediante el formulario de preinscripción. Contacta directamente con la secretaría para orientación y acompañamiento pastoral.</p></div><a href="/contacto" class="btn btn-primary">Contactar <Icon name="arrow-up-right" size={17}/></a></div></section>
+</Layout>

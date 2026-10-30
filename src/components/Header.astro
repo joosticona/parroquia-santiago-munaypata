@@ -1,0 +1,19 @@
+---
+import Icon from './Icon.astro';
+const {settings,pathname='/'}=Astro.props;
+const links=[['/','Inicio'],['/sacramentos','Sacramentos'],['/horarios','Horarios'],['/vida-parroquial','Vida parroquial'],['/contacto','Contacto']];
+---
+<div class="topline"><div class="container topline-inner"><span><Icon name="pin" size={13}/> Munaypata, La Paz · Bolivia</span><span class="topline-right"><Icon name="heart" size={13}/> Una comunidad abierta para todos</span></div></div>
+<header class="site-header" id="site-header">
+  <nav class="container navbar" aria-label="Navegación principal">
+    <a class="brand" href="/" aria-label="Parroquia Apóstol Santiago, inicio">
+      <img src={settings.logo || '/emblema.svg'} alt="Emblema parroquial" width="49" height="49"/>
+      <span class="brand-text"><strong>{settings.name}</strong><small>{settings.subtitle}</small></span>
+    </a>
+    <div class="nav-links" id="main-menu">
+      {links.map(([href,label])=><a class:list={['nav-link',{active: href==='/' ? pathname==='/' : pathname.startsWith(href)}]} href={href}>{label}</a>)}
+      <a class="nav-cta" href="/inscripcion">Preinscribirme <Icon name="arrow-up-right" size={16}/></a>
+    </div>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="main-menu"><Icon name="menu" size={25}/></button>
+  </nav>
+</header>

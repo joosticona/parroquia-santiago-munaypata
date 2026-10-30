@@ -1,0 +1,18 @@
+---
+import Layout from '../components/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import { getContent } from '../lib/db.js';
+const settings=getContent('settings');
+---
+<Layout settings={settings} title="Privacidad y protección de datos"><PageHero eyebrow="TUS DATOS IMPORTAN" title="Privacidad" description="Información sobre el uso de los datos de las solicitudes sacramentales en este portal."/>
+<section class="section"><div class="container legal-content" data-reveal>
+  <div class="form-alert"><strong>Información provisional para revisión parroquial</strong><span>Antes de activar inscripciones reales, el responsable de la parroquia debe revisar este documento, completar su política de conservación y comprobar sus obligaciones legales.</span></div>
+  <h2>¿Qué datos solicitamos?</h2><p>Para gestionar una preinscripción recabamos el nombre de quien recibirá el sacramento, su edad, el nombre del responsable, un teléfono, un correo opcional y un comentario opcional. No pedimos documentos de identidad ni certificados mediante este formulario.</p>
+  <h2>¿Para qué se utilizan?</h2><p>Exclusivamente para registrar la solicitud, facilitar el seguimiento, coordinar la preparación y permitir que el equipo parroquial se comunique con el responsable. El envío del formulario no garantiza fechas ni plazas.</p>
+  <h2>¿Quién puede consultar los datos?</h2><p>El personal autorizado que administre el portal puede ver las solicitudes desde un panel protegido. La consulta pública requiere el código único y el teléfono registrado, y muestra únicamente el estado y tipo de sacramento.</p>
+  <h2>Datos de menores</h2><p>Los formularios deben ser enviados por una persona mayor de edad o responsable del participante, quien manifiesta su autorización en la casilla correspondiente. La parroquia deberá verificar los requisitos aplicables al tratamiento de datos de menores.</p>
+  <h2>¿Cuánto tiempo se conservan?</h2><p>Los registros se conservan en la base de datos del servidor hasta que los elimine un administrador. No existe todavía una eliminación automática. La parroquia deberá definir e informar un plazo adecuado antes de activar el servicio.</p>
+  <h2>Corrección o eliminación</h2><p>Para consultar, corregir o solicitar la eliminación de datos, contacta con la secretaría parroquial mediante los canales oficiales indicados en la <a href="/contacto">página de contacto</a>.</p>
+  <h2>Seguridad</h2><p>El acceso administrativo requiere una sesión autorizada. Para operar el sistema con datos reales debe utilizarse HTTPS, copias de seguridad protegidas, actualizaciones y controles de acceso apropiados.</p>
+</div></section>
+</Layout>

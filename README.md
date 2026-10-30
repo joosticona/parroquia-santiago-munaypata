@@ -153,6 +153,20 @@ Las reglas de [AGENTS.md](./AGENTS.md) se aplican a las páginas públicas y al 
 
 No se inventaron campañas de inscripción, fechas de catequesis, requisitos definitivos ni datos personales. Los textos de requisitos en los sacramentos son **orientativos** y editables desde el panel.
 
+## Preparación para Cloudflare Pages
+
+El despliegue completo requiere D1 y R2: el disco local de Node no es almacenamiento persistente en Pages. El backend recibe los bindings por solicitud, sin compartirlos entre usuarios; el modo Node conserva SQLite y cargas locales.
+
+- `bun run build:pages` genera `dist/pages/`, con un Worker de Pages en `_worker.js/index.js` y sus recursos estáticos. `bun run build` conserva el servidor Node original.
+- El adaptador de proyecto en `adapters/pages/` utiliza la API de servidor de la versión fijada de Astro 7. No requiere instalar el adaptador oficial orientado a Workers ni cambiar a una versión anterior de Astro.
+- Crear una base D1 y aplicar `migrations/0001_initial.sql`. Configurar el binding **DB** de Pages hacia esa base.
+- Crear un bucket R2 privado y configurar el binding **UPLOADS**. Las cargas se sirven desde la ruta `/media/`; no se debe publicar el bucket directamente.
+- Configurar Pages con `nodejs_compat` y una fecha de compatibilidad actual. Configurar secretos **ADMIN_PASSWORD** (mínimo 12 caracteres, no empezar por `CAMBIA_`) y **SESSION_SECRET** (mínimo 32 caracteres). No guardarlos en Git. **PUBLIC_ORIGIN** es opcional.
+- Una base nueva usa el contenido predeterminado si aún no hay ajustes guardados. No se copian automáticamente registros personales, archivos ni ajustes de la base local a la nube.
+- `bun run test` incluye pruebas de migración D1, aislamiento entre bindings, autenticación y API con secretos cloud y cargas/lectura R2 mediante dobles de prueba. No sustituyen la validación final en Cloudflare.
+
+**Estado de publicación:** pendiente. La autenticación y la lectura de proyectos Pages están verificadas, pero R2 devuelve HTTP 403 / código 10042 (`Please enable R2 through the Cloudflare Dashboard`) en la cuenta seleccionada. No se han creado recursos remotos ni realizado un despliegue; no hay URL pública verificada. Hace falta resolver la habilitación efectiva de R2 en la cuenta antes de continuar y verificar el Worker en el runtime real de Cloudflare.
+
 ## Revisión responsive y accesibilidad
 
 - El menú público admite cierre con Escape, clic fuera y cambio al ancho de escritorio; mantiene sincronizados su nombre accesible y `aria-expanded`. En pantallas de poca altura tiene desplazamiento propio.

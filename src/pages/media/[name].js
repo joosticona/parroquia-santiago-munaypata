@@ -1,6 +1,4 @@
-import { readFile } from 'node:fs/promises';
-import path from 'node:path';
-import { dataDir } from '../../lib/db.js';
+import { readUpload } from '../../lib/media.js';
 export const prerender = false;
 const types = {
   jpg: 'image/jpeg',
@@ -8,12 +6,12 @@ const types = {
   webp: 'image/webp',
   pdf: 'application/pdf',
 };
-export async function GET({ params }) {
+export async function GET({ params, locals }) {
   const name = String(params.name || '');
   if (!/^[0-9a-f-]{36}\.(jpg|png|webp|pdf)$/.test(name))
     return new Response('No encontrado', { status: 404 });
   try {
-    const file = await readFile(path.join(dataDir(), 'uploads', name));
+    const file = await readUpload(name, locals?.runtime?.env);
     const ext = name.split('.').at(-1);
     return new Response(file, {
       headers: {

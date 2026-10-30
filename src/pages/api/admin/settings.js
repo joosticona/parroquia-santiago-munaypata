@@ -7,13 +7,15 @@ import {
   sameOrigin,
 } from '../../../lib/auth.js';
 export const prerender = false;
-export async function POST({ request }) {
-  if (!adminResponse(request)) return unauthorized();
-  if (!sameOrigin(request)) return json({ error: 'Origen no permitido' }, 403);
+export async function POST({ request, locals }) {
+  const env = locals?.runtime?.env;
+  if (!(await adminResponse(request, env))) return unauthorized();
+  if (!sameOrigin(request, env))
+    return json({ error: 'Origen no permitido' }, 403);
   try {
     const body = await request.json();
-    const value = normalizeSettings(body, getContent('settings'));
-    setContent('settings', value);
+    const value = normalizeSettings(body, await getContent('settings', env));
+    await setContent('settings', value, env);
     return json({ ok: true, value });
   } catch (e) {
     return json({ error: e.message || 'Datos inválidos' }, 400);

@@ -7,7 +7,7 @@ import Heading from '../components/Heading.astro';
 import FormField from '../components/forms/FormField.astro';
 import FormHeading from '../components/forms/FormHeading.astro';
 import { getContent } from '../lib/db.js';
-const settings = getContent('settings');
+const settings = await getContent('settings', Astro.locals.runtime?.env);
 ---
 
 <Layout settings={settings} title="Consultar solicitud">

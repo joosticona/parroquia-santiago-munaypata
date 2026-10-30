@@ -2,8 +2,10 @@ import { findRegistration } from '../../lib/db.js';
 import { cleanPhone } from '../../lib/validation.js';
 import { json, throttle, clientKey, sameOrigin } from '../../lib/auth.js';
 export const prerender = false;
-export async function POST({ request, clientAddress }) {
-  if (!sameOrigin(request)) return json({ error: 'Origen no permitido' }, 403);
+export async function POST({ request, clientAddress, locals }) {
+  const env = locals?.runtime?.env;
+  if (!sameOrigin(request, env))
+    return json({ error: 'Origen no permitido' }, 403);
   if (throttle(clientKey(request, 'estado', clientAddress), 15, 60 * 60 * 1000))
     return json({ error: 'Demasiadas consultas. Prueba más tarde.' }, 429);
   let body;
@@ -19,7 +21,7 @@ export async function POST({ request, clientAddress }) {
     phone = cleanPhone(body.phone);
   if (!/^STG-[0-9A-F]{16}$/.test(code) || phone.length < 7)
     return json({ error: 'Comprueba el código y el teléfono.' }, 400);
-  const reg = findRegistration(code);
+  const reg = await findRegistration(code, env);
   if (!reg || reg.phone !== phone)
     return json(
       { error: 'No encontramos una solicitud con estos datos.' },

@@ -1,98 +1,111 @@
-import './env.js';
-import { DatabaseSync } from 'node:sqlite';
-import { mkdirSync } from 'node:fs';
-import path from 'node:path';
 import { DEFAULTS, STATES } from './defaults.js';
 
-let db;
-export function dataDir() {
-  return path.resolve(process.env.DATA_DIR || './data');
+// D1 bindings always belong to the caller, never to shared module state.
+export async function getDb(env) {
+  if (env !== undefined) {
+    if (!env.DB) throw new Error('Falta el binding D1 DB');
+    return {
+      prepare(sql) {
+        const statement = env.DB.prepare(sql);
+        return {
+          get: (...args) => statement.bind(...args).first(),
+          all: async (...args) => (await statement.bind(...args).all()).results,
+          run: async (...args) => {
+            const result = await statement.bind(...args).run();
+            return { changes: result.meta.changes };
+          },
+        };
+      },
+    };
+  }
+  return (await import('./local-db.js')).getDb();
 }
-export function getDb() {
-  if (db) return db;
-  mkdirSync(dataDir(), { recursive: true });
-  db = new DatabaseSync(path.join(dataDir(), 'parroquia.sqlite'));
-  db.exec(`PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;
-    CREATE TABLE IF NOT EXISTS content (key TEXT PRIMARY KEY, value TEXT NOT NULL);
-    CREATE TABLE IF NOT EXISTS registrations (
-      code TEXT PRIMARY KEY, sacrament TEXT NOT NULL, name TEXT NOT NULL,
-      age TEXT NOT NULL, guardian TEXT NOT NULL, phone TEXT NOT NULL,
-      email TEXT NOT NULL DEFAULT '', notes TEXT NOT NULL DEFAULT '',
-      status TEXT NOT NULL DEFAULT 'Recibida', admin_note TEXT NOT NULL DEFAULT '',
-      created_at TEXT NOT NULL, updated_at TEXT NOT NULL
-    );
-    CREATE INDEX IF NOT EXISTS idx_reg_status ON registrations(status);
-    CREATE INDEX IF NOT EXISTS idx_reg_created ON registrations(created_at);
-  `);
-  const find = db.prepare('SELECT key FROM content WHERE key=?');
-  const insert = db.prepare('INSERT INTO content(key,value) VALUES(?,?)');
-  for (const [key, value] of Object.entries(DEFAULTS))
-    if (!find.get(key)) insert.run(key, JSON.stringify(value));
-  return db;
+export async function dataDir() {
+  return (await import('./local-db.js')).dataDir();
 }
-export function getContent(key) {
+export async function getContent(key, env) {
   if (!(key in DEFAULTS)) throw new Error('Contenido no permitido');
-  const row = getDb().prepare('SELECT value FROM content WHERE key=?').get(key);
+  const row = await (
+    await getDb(env)
+  )
+    .prepare('SELECT value FROM content WHERE key=?')
+    .get(key);
   return row ? JSON.parse(row.value) : DEFAULTS[key];
 }
-export function getAllContent() {
+export async function getAllContent(env) {
   return Object.fromEntries(
-    Object.keys(DEFAULTS).map((k) => [k, getContent(k)]),
+    await Promise.all(
+      Object.keys(DEFAULTS).map(async (k) => [k, await getContent(k, env)]),
+    ),
   );
 }
-export function setContent(key, value) {
+export async function setContent(key, value, env) {
   if (!(key in DEFAULTS)) throw new Error('Contenido no permitido');
-  getDb()
+  await (
+    await getDb(env)
+  )
     .prepare(
       'INSERT INTO content(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',
     )
     .run(key, JSON.stringify(value));
 }
-export function newRegistration(item) {
-  const db = getDb();
+export async function newRegistration(item, env) {
+  const db = await getDb(env);
   const now = new Date().toISOString();
-  db.prepare(
-    `INSERT INTO registrations (code,sacrament,name,age,guardian,phone,email,notes,status,admin_note,created_at,updated_at)
+  await db
+    .prepare(
+      `INSERT INTO registrations (code,sacrament,name,age,guardian,phone,email,notes,status,admin_note,created_at,updated_at)
     VALUES (?,?,?,?,?,?,?,?,'Recibida','',?,?)`,
-  ).run(
-    item.code,
-    item.sacrament,
-    item.name,
-    item.age,
-    item.guardian,
-    item.phone,
-    item.email,
-    item.notes,
-    now,
-    now,
-  );
+    )
+    .run(
+      item.code,
+      item.sacrament,
+      item.name,
+      item.age,
+      item.guardian,
+      item.phone,
+      item.email,
+      item.notes,
+      now,
+      now,
+    );
 }
-export function listRegistrations(limit = 2000) {
+export async function listRegistrations(limit = 2000, env) {
   if (limit === 0)
-    return getDb()
+    return (await getDb(env))
       .prepare('SELECT * FROM registrations ORDER BY created_at DESC')
       .all();
-  return getDb()
+  return (await getDb(env))
     .prepare('SELECT * FROM registrations ORDER BY created_at DESC LIMIT ?')
     .all(limit);
 }
-export function findRegistration(code) {
-  return getDb().prepare('SELECT * FROM registrations WHERE code=?').get(code);
+export async function findRegistration(code, env) {
+  return (await getDb(env))
+    .prepare('SELECT * FROM registrations WHERE code=?')
+    .get(code);
 }
-export function setRegistrationStatus(code, status, note) {
+export async function setRegistrationStatus(code, status, note, env) {
   if (!STATES.includes(status)) return false;
   return (
-    getDb()
-      .prepare(
-        'UPDATE registrations SET status=?, admin_note=?,updated_at=? WHERE code=?',
+    (
+      await (
+        await getDb(env)
       )
-      .run(status, note.slice(0, 800), new Date().toISOString(), code).changes >
-    0
+        .prepare(
+          'UPDATE registrations SET status=?, admin_note=?,updated_at=? WHERE code=?',
+        )
+        .run(status, note.slice(0, 800), new Date().toISOString(), code)
+    ).changes > 0
   );
 }
-export function removeRegistration(code) {
+export async function removeRegistration(code, env) {
   return (
-    getDb().prepare('DELETE FROM registrations WHERE code=?').run(code)
-      .changes > 0
+    (
+      await (
+        await getDb(env)
+      )
+        .prepare('DELETE FROM registrations WHERE code=?')
+        .run(code)
+    ).changes > 0
   );
 }

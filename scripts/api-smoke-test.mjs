@@ -1,8 +1,7 @@
 import { strict as assert } from 'node:assert';
 import { mkdtempSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
 import path from 'node:path';
-const folder = mkdtempSync(path.join(tmpdir(), 'santiago-api-'));
+const folder = mkdtempSync(path.join(process.cwd(), 'santiago-api-'));
 process.env.DATA_DIR = folder;
 process.env.ADMIN_PASSWORD = 'una-clave-fuerte-de-pruebas-2026';
 process.env.SESSION_SECRET =
@@ -30,7 +29,7 @@ try {
     }),
   );
   assert.equal(r.status, 403, 'inscripciones bloqueadas por defecto');
-  const cookie = 'santiago_admin=' + createSession();
+  const cookie = 'santiago_admin=' + (await createSession());
   r = await parse(
     await admin.POST({
       request: req(
@@ -108,8 +107,10 @@ try {
     'OK: rutas API de inscripción, seguimiento, panel, avisos, upload y media.',
   );
 } finally {
-  getDb().close();
+  (await getDb()).close();
   // Bun on Windows keeps SQLite statements alive until garbage collection.
   globalThis.Bun?.gc(true);
   rmSync(folder, { recursive: true, force: true });
 }
+
+await import('./cloud-backend-test.mjs');

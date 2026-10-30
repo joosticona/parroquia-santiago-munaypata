@@ -5,7 +5,9 @@ import Action from '../../components/Action.astro';
 import Layout from '../../components/Layout.astro';
 import Icon from '../../components/Icon.astro';
 import { getAllContent } from '../../lib/db.js';
-const { settings, sacramentos } = getAllContent();
+const { settings, sacramentos } = await getAllContent(
+  Astro.locals.runtime?.env,
+);
 const s = sacramentos.find((x) => x.id === Astro.params.slug);
 if (!s) return Astro.redirect('/sacramentos');
 ---

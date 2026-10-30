@@ -8,7 +8,7 @@ import Layout from '../components/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
 import { getContent } from '../lib/db.js';
-const settings = getContent('settings');
+const settings = await getContent('settings', Astro.locals.runtime?.env);
 const mapLink =
   'https://www.google.com/maps/search/?api=1&query=' +
   encodeURIComponent('Parroquia Apóstol Santiago Munaypata La Paz Bolivia');

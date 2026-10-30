@@ -7,7 +7,7 @@ import NavItem from '../../components/admin/NavItem.astro';
 import Icon from '../../components/Icon.astro';
 import { isAdmin } from '../../lib/auth.js';
 import '../../styles/global.css';
-if (!isAdmin(Astro)) return Astro.redirect('/admin/login');
+if (!(await isAdmin(Astro))) return Astro.redirect('/admin/login');
 ---
 
 <!doctype html>

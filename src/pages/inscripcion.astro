@@ -10,7 +10,9 @@ import Eyebrow from '../components/Eyebrow.astro';
 import WizardProgress from '../components/forms/WizardProgress.astro';
 import SacramentOption from '../components/forms/SacramentOption.astro';
 import { getAllContent } from '../lib/db.js';
-const { settings, sacramentos } = getAllContent();
+const { settings, sacramentos } = await getAllContent(
+  Astro.locals.runtime?.env,
+);
 const selected = Astro.url.searchParams.get('para') || '';
 ---
 

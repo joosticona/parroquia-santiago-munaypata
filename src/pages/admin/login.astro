@@ -7,9 +7,9 @@ import Layout from '../../components/Layout.astro';
 import Icon from '../../components/Icon.astro';
 import { getContent } from '../../lib/db.js';
 import { isAdmin, authConfigured } from '../../lib/auth.js';
-const settings = getContent('settings');
-if (isAdmin(Astro)) return Astro.redirect('/admin');
-const configured = authConfigured();
+const settings = await getContent('settings', Astro.locals.runtime?.env);
+if (await isAdmin(Astro)) return Astro.redirect('/admin');
+const configured = authConfigured(Astro.locals.runtime?.env);
 ---
 
 <Layout settings={settings} title="Acceso administrativo" hideChrome={true}>

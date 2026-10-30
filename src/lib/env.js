@@ -1,6 +1,14 @@
-import { existsSync } from 'node:fs';
-// El modo standalone de Astro no carga automáticamente .env en todos los alojamientos.
-// Permite usar .env en desarrollo y variables del entorno en producción.
-if (existsSync('.env') && typeof process.loadEnvFile === 'function') {
-  process.loadEnvFile('.env');
+// Standalone Node may not load .env; Workers receive secrets explicitly.
+if (
+  typeof process !== 'undefined' &&
+  typeof process.loadEnvFile === 'function'
+) {
+  try {
+    process.loadEnvFile('.env');
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
+}
+export function runtimeEnv(env) {
+  return env ?? (typeof process !== 'undefined' ? process.env : {});
 }

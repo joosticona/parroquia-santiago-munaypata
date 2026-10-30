@@ -6,21 +6,25 @@ import {
   sameOrigin,
 } from '../../../lib/auth.js';
 export const prerender = false;
-export async function POST({ request }) {
-  if (!adminResponse(request)) return unauthorized();
-  if (!sameOrigin(request)) return json({ error: 'Origen no permitido' }, 403);
+export async function POST({ request, locals }) {
+  const env = locals?.runtime?.env;
+  if (!(await adminResponse(request, env))) return unauthorized();
+  if (!sameOrigin(request, env))
+    return json({ error: 'Origen no permitido' }, 403);
   try {
     const body = await request.json();
     const code = String(body.code || '').slice(0, 32);
     if (body.action === 'delete') {
-      if (!removeRegistration(code)) throw Error('Solicitud no encontrada');
+      if (!(await removeRegistration(code, env)))
+        throw Error('Solicitud no encontrada');
     } else if (body.action === 'update') {
       if (
-        !setRegistrationStatus(
+        !(await setRegistrationStatus(
           code,
           String(body.status),
           String(body.note || ''),
-        )
+          env,
+        ))
       )
         throw Error('Estado o solicitud inválidos');
     } else throw Error('Acción no permitida');

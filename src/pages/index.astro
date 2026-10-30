@@ -11,7 +11,9 @@ import Layout from '../components/Layout.astro';
 import Icon from '../components/Icon.astro';
 import SacramentCard from '../components/SacramentCard.astro';
 import { getAllContent } from '../lib/db.js';
-const { settings, sacramentos, horarios, avisos } = getAllContent();
+const { settings, sacramentos, horarios, avisos } = await getAllContent(
+  Astro.locals.runtime?.env,
+);
 ---
 
 <Layout

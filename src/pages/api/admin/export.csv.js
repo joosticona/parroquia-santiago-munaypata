@@ -20,14 +20,15 @@ function cell(v) {
   if (/^[\s]*[=+@-]/.test(s)) s = "'" + s;
   return '"' + s.replaceAll('"', '""') + '"';
 }
-export function GET({ request }) {
-  if (!adminResponse(request))
+export async function GET({ request, locals }) {
+  const env = locals?.runtime?.env;
+  if (!(await adminResponse(request, env)))
     return new Response('No autorizado', { status: 401 });
   const csv =
     '\uFEFF' +
     head.join(',') +
     '\r\n' +
-    listRegistrations(0)
+    (await listRegistrations(0, env))
       .map((r) => head.map((h) => cell(r[h])).join(','))
       .join('\r\n');
   return new Response(csv, {

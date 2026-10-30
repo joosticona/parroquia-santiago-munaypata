@@ -8,7 +8,9 @@ import Image from '../components/Image.astro';
 import Layout from '../components/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import { getAllContent } from '../lib/db.js';
-const { settings, avisos, eventos, galeria } = getAllContent();
+const { settings, avisos, eventos, galeria } = await getAllContent(
+  Astro.locals.runtime?.env,
+);
 ---
 
 <Layout settings={settings} title="Vida parroquial">

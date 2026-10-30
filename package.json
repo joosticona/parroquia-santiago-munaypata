@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "astro dev --host 0.0.0.0",
     "build": "astro build",
+    "build:pages": "bun scripts/build-pages.mjs",
     "preview": "astro preview --host 0.0.0.0",
     "start": "node ./dist/server/entry.mjs",
     "check": "astro check",

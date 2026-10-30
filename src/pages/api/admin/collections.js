@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto';
 import { getContent, setContent } from '../../../lib/db.js';
 import { normalizeRecord } from '../../../lib/validation.js';
 import {
@@ -8,9 +7,11 @@ import {
   sameOrigin,
 } from '../../../lib/auth.js';
 export const prerender = false;
-export async function POST({ request }) {
-  if (!adminResponse(request)) return unauthorized();
-  if (!sameOrigin(request)) return json({ error: 'Origen no permitido' }, 403);
+export async function POST({ request, locals }) {
+  const env = locals?.runtime?.env;
+  if (!(await adminResponse(request, env))) return unauthorized();
+  if (!sameOrigin(request, env))
+    return json({ error: 'Origen no permitido' }, 403);
   try {
     const body = await request.json();
     const { kind, operation, record } = body;
@@ -22,7 +23,7 @@ export async function POST({ request }) {
       throw Error('Sección no permitida');
     if (!['create', 'update', 'delete'].includes(operation))
       throw Error('Operación no permitida');
-    const existing = getContent(kind),
+    const existing = await getContent(kind, env),
       id = String(record?.id || '').slice(0, 70);
     const index = existing.findIndex((v) => v.id === id);
     if (kind === 'sacramentos' && operation !== 'update')
@@ -34,7 +35,7 @@ export async function POST({ request }) {
     } else if (operation === 'create') {
       if (existing.length >= 100) throw Error('Límite de registros alcanzado');
       updated = [
-        { ...normalizeRecord(kind, record, {}), id: randomUUID() },
+        { ...normalizeRecord(kind, record, {}), id: crypto.randomUUID() },
         ...existing,
       ];
     } else {
@@ -43,7 +44,7 @@ export async function POST({ request }) {
         i === index ? { ...normalizeRecord(kind, record, r), id: r.id } : r,
       );
     }
-    setContent(kind, updated);
+    await setContent(kind, updated, env);
     return json({ ok: true, value: updated });
   } catch (e) {
     return json({ error: e.message || 'No se pudo guardar' }, 400);

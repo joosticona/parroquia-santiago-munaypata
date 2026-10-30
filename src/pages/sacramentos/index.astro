@@ -7,7 +7,9 @@ import PageHero from '../../components/PageHero.astro';
 import SacramentCard from '../../components/SacramentCard.astro';
 import Icon from '../../components/Icon.astro';
 import { getAllContent } from '../../lib/db.js';
-const { settings, sacramentos } = getAllContent();
+const { settings, sacramentos } = await getAllContent(
+  Astro.locals.runtime?.env,
+);
 ---
 
 <Layout settings={settings} title="Nuestros sacramentos">

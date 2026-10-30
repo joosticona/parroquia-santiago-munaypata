@@ -2,46 +2,395 @@
 import Layout from '../components/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
-import {getAllContent} from '../lib/db.js';
-const {settings,sacramentos}=getAllContent();
-const selected=Astro.url.searchParams.get('para')||'';
+import { getAllContent } from '../lib/db.js';
+const { settings, sacramentos } = getAllContent();
+const selected = Astro.url.searchParams.get('para') || '';
 ---
-<Layout settings={settings} title="Preinscripción a sacramentos"><PageHero eyebrow="UN PRIMER PASO CONTIGO" title="Preinscripción en línea" description="Completa una solicitud inicial y consulta su avance desde cualquier dispositivo. La secretaría confirmará los siguientes pasos."/>
-<section class="section form-page-section"><div class="container registration-layout">
-  <div class="form-area" data-reveal>
-    {!settings.registrationOpen&&<div class="form-alert" role="status"><Icon name="circle-help" size={23}/><div><strong>Preinscripciones aún no habilitadas</strong><p>La parroquia debe validar los requisitos y activar el sistema desde su centro de control. Puedes explorar el formulario, pero todavía no enviar solicitudes.</p></div></div>}
-    <div class="form-heading"><p class="eyebrow"><span class="eyebrow-line"></span> FORMULARIO DE SOLICITUD</p><h2>Empecemos <em>este camino.</em></h2><p>Este formulario es una preinscripción, no una reserva de fecha ni confirmación del sacramento.</p></div>
-    <div class="wizard-progress" aria-label="Progreso"><div class="wizard-marker current" data-step-indicator="1"><span>1</span><small>Sacramento</small></div><div class="wizard-connector"></div><div class="wizard-marker" data-step-indicator="2"><span>2</span><small>Datos personales</small></div><div class="wizard-connector"></div><div class="wizard-marker" data-step-indicator="3"><span>3</span><small>Confirmar</small></div></div>
-    <form id="register-form" class="form-card" novalidate>
-      <section class="form-step" data-step="1"><h3>¿Qué sacramento deseas solicitar?</h3><p class="field-intro">Selecciona el sacramento para el cual quieres recibir orientación.</p><div class="sacrament-options">
-        {sacramentos.map(s=><label class="option-card"><input type="radio" name="sacrament" value={s.id} checked={s.id===selected} disabled={!s.open} required/><span class="option-symbol"><Icon name={s.icon} size={27}/></span><span><strong>{s.title}</strong><small>{s.open?s.tag:"No disponible"}</small></span><Icon name="check-circle" class="option-check" size={22}/></label>)}
-      </div></section>
-      <section class="form-step" data-step="2" hidden><h3>Cuéntanos un poco de ti</h3><p class="field-intro">Solo solicitamos datos básicos para que la secretaría pueda comunicarse.</p><div class="fields-grid"><label class="field full">Nombre completo de quien recibirá el sacramento <span>*</span><input name="name" autocomplete="name" placeholder="Nombres y apellidos" minlength="5" maxlength="120" required/></label><label class="field">Edad <span>*</span><input type="number" name="age" inputmode="numeric" placeholder="Ej. 12" min="0" max="110" required/></label><label class="field">Teléfono de contacto <span>*</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Ej. 71234567" minlength="7" maxlength="20" required/></label><label class="field full">Nombre del padre, madre, tutor o responsable <span>*</span><input name="guardian" autocomplete="off" placeholder="Nombres y apellidos del responsable" minlength="5" maxlength="120" required/></label><label class="field full">Correo electrónico <small>(opcional)</small><input name="email" type="email" autocomplete="email" placeholder="correo@ejemplo.com" maxlength="120"/></label><label class="field full">Consulta o comentario <small>(opcional)</small><textarea name="notes" rows="3" maxlength="800" placeholder="¿Hay algo importante que debamos conocer?"></textarea></label></div></section>
-      <section class="form-step" data-step="3" hidden><h3>Revisa y confirma</h3><p class="field-intro">Verifica que los datos sean correctos antes de enviar tu solicitud.</p><div class="review-box" id="review-box"></div><label class="checkbox-line"><input type="checkbox" name="consent" required/><span>Autorizo a la parroquia a utilizar estos datos exclusivamente para gestionar mi solicitud y contactarme sobre la preparación sacramental. Soy mayor de edad o responsable del participante. <a href="/privacidad" target="_blank" rel="noopener noreferrer" class="privacy-link">Leer información de privacidad</a>. <strong>*</strong></span></label><input type="text" name="website" autocomplete="off" tabindex="-1" aria-hidden="true" class="honeypot"/></section>
-      <p class="form-feedback" id="form-feedback" role="alert" hidden></p>
-      <div class="form-navigation"><button type="button" class="btn btn-secondary" id="previous-step" hidden><Icon name="arrow-left" size={17}/> Anterior</button><button type="button" class="btn btn-primary" id="next-step">Continuar <Icon name="arrow" size={17}/></button><button type="submit" class="btn btn-primary" id="submit-registration" hidden disabled={!settings.registrationOpen}>Enviar solicitud <Icon name="arrow-up-right" size={17}/></button></div>
-    </form>
-    <div class="success-card" id="success-card" hidden><span class="success-icon"><Icon name="check-circle" size={52}/></span><p class="eyebrow">SOLICITUD RECIBIDA</p><h2>¡Ya diste el <em>primer paso!</em></h2><p>Guarda el siguiente código y el teléfono que registraste para consultar tu estado.</p><div class="receipt-code" id="receipt-code"></div><button type="button" class="copy-button" id="copy-code">Copiar código <Icon name="file-text" size={17}/></button><p class="fine-print">Este comprobante no confirma una plaza ni una fecha de celebración.</p><a href="/consultar" class="btn btn-primary">Consultar estado <Icon name="arrow-up-right" size={17}/></a></div>
-  </div>
-  <aside class="registration-aside" data-reveal><div class="registration-help"><div class="help-icon"><Icon name="shield-check" size={29}/></div><h3>Estamos contigo en cada paso.</h3><p>Tus datos se usarán para organizar tu preinscripción. La preparación y los documentos serán validados por la parroquia.</p><hr/><p><Icon name="check" size={18}/> Solicitud inicial sin compromiso</p><p><Icon name="check" size={18}/> Código de seguimiento</p><p><Icon name="check" size={18}/> Atención personalizada</p></div><div class="registration-questions"><Icon name="circle-help" size={24}/><h4>¿Prefieres hablar directamente?</h4><p>La secretaría podrá orientarte sobre fechas y documentos.</p><a href="/contacto">Ver cómo contactarnos <Icon name="arrow-up-right" size={17}/></a></div></aside>
-</div></section>
-<script>
-  let current=1;
-  const form=document.getElementById('register-form');const next=document.getElementById('next-step');const previous=document.getElementById('previous-step');const submit=document.getElementById('submit-registration');const feedback=document.getElementById('form-feedback');
-  function showError(m){feedback.textContent=m;feedback.hidden=false;}
-  function clearError(){feedback.hidden=true;feedback.textContent='';}
-  function validStep(){
-    const section=form.querySelector(`[data-step="${current}"]`);
-    const fields=[...section.querySelectorAll('input:not(.honeypot),textarea')];
-    if(current===1 && !form.querySelector('input[name="sacrament"]:checked')){showError('Selecciona un sacramento para continuar.');return false;}
-    for(const input of fields) if(!input.checkValidity()){input.reportValidity();return false;}
-    return true;
-  }
-  function changeStep(step){current=step;clearError();document.querySelectorAll('.form-step').forEach(x=>x.hidden=Number(x.dataset.step)!==current);document.querySelectorAll('[data-step-indicator]').forEach(x=>{let n=Number(x.dataset.stepIndicator);x.classList.toggle('current',n===current);x.classList.toggle('finished',n<current);});previous.hidden=current===1;next.hidden=current===3;submit.hidden=current!==3;
-    if(current===3){const f=new FormData(form),s=form.querySelector('input[name="sacrament"]:checked');document.getElementById('review-box').innerHTML='';const rows=[['Sacramento',s?.closest('label')?.querySelector('strong')?.textContent||''],['Participante',f.get('name')],['Edad',f.get('age')+' años'],['Responsable',f.get('guardian')],['Teléfono',f.get('phone')],['Correo',f.get('email')||'No indicado']];const box=document.getElementById('review-box');for(const [a,b] of rows){const row=document.createElement('div');const name=document.createElement('span');const value=document.createElement('strong');name.textContent=a;value.textContent=String(b);row.append(name,value);box.append(row);}}
-  }
-  next.addEventListener('click',()=>{clearError();if(validStep())changeStep(current+1);});previous.addEventListener('click',()=>changeStep(current-1));
-  form.addEventListener('submit',async e=>{e.preventDefault();clearError();if(!validStep())return;const f=new FormData(form);const body=Object.fromEntries(f.entries());body.consent=form.elements.consent.checked;submit.disabled=true;submit.textContent='Enviando...';try{const res=await fetch('/api/inscripciones',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const data=await res.json();if(!res.ok)throw Error(data.error||'Error al enviar');document.getElementById('receipt-code').textContent=data.code;form.hidden=true;document.querySelector('.wizard-progress').hidden=true;document.getElementById('success-card').hidden=false;document.getElementById('copy-code').addEventListener('click',async()=>{await navigator.clipboard.writeText(data.code);document.getElementById('copy-code').textContent='¡Copiado!';});document.querySelector('.success-card').scrollIntoView({behavior:'smooth',block:'center'});}catch(err){showError(err.message);}finally{submit.disabled=false;submit.textContent='Enviar solicitud ↗';}});
-  changeStep(1);
-</script>
+
+<Layout settings={settings} title="Preinscripción a sacramentos">
+  <PageHero
+    eyebrow="UN PRIMER PASO CONTIGO"
+    title="Preinscripción en línea"
+    description="Completa una solicitud inicial y consulta su avance desde cualquier dispositivo. La secretaría confirmará los siguientes pasos."
+  />
+  <section class="section form-page-section">
+    <div class="container registration-layout">
+      <div class="form-area" data-reveal>
+        {!settings.registrationOpen && (
+          <div class="form-alert" role="status">
+            <Icon name="circle-help" size={23} />
+            <div>
+              <strong>Preinscripciones aún no habilitadas</strong>
+              <p>
+                La parroquia debe validar los requisitos y activar el sistema
+                desde su centro de control. Puedes explorar el formulario, pero
+                todavía no enviar solicitudes.
+              </p>
+            </div>
+          </div>
+        )}
+        <div class="form-heading">
+          <p class="eyebrow">
+            <span class="eyebrow-line"></span> FORMULARIO DE SOLICITUD
+          </p>
+          <h2>
+            Empecemos <em>este camino.</em>
+          </h2>
+          <p>
+            Este formulario es una preinscripción, no una reserva de fecha ni
+            confirmación del sacramento.
+          </p>
+        </div>
+        <div class="wizard-progress" aria-label="Progreso">
+          <div class="wizard-marker current" data-step-indicator="1">
+            <span>1</span>
+            <small>Sacramento</small>
+          </div>
+          <div class="wizard-connector"></div>
+          <div class="wizard-marker" data-step-indicator="2">
+            <span>2</span>
+            <small>Datos personales</small>
+          </div>
+          <div class="wizard-connector"></div>
+          <div class="wizard-marker" data-step-indicator="3">
+            <span>3</span>
+            <small>Confirmar</small>
+          </div>
+        </div>
+        <form id="register-form" class="form-card" novalidate>
+          <section class="form-step" data-step="1">
+            <h3>¿Qué sacramento deseas solicitar?</h3>
+            <p class="field-intro">
+              Selecciona el sacramento para el cual quieres recibir orientación.
+            </p>
+            <div class="sacrament-options">
+              {sacramentos.map((s) => (
+                <label class="option-card">
+                  <input
+                    type="radio"
+                    name="sacrament"
+                    value={s.id}
+                    checked={s.id === selected}
+                    disabled={!s.open}
+                    required
+                  />
+                  <span class="option-symbol">
+                    <Icon name={s.icon} size={27} />
+                  </span>
+                  <span>
+                    <strong>{s.title}</strong>
+                    <small>{s.open ? s.tag : 'No disponible'}</small>
+                  </span>
+                  <Icon name="check-circle" class="option-check" size={22} />
+                </label>
+              ))}
+            </div>
+          </section>
+          <section class="form-step" data-step="2" hidden>
+            <h3>Cuéntanos un poco de ti</h3>
+            <p class="field-intro">
+              Solo solicitamos datos básicos para que la secretaría pueda
+              comunicarse.
+            </p>
+            <div class="fields-grid">
+              <label class="field full">
+                Nombre completo de quien recibirá el sacramento <span>*</span>
+                <input
+                  name="name"
+                  autocomplete="name"
+                  placeholder="Nombres y apellidos"
+                  minlength="5"
+                  maxlength="120"
+                  required
+                />
+              </label>
+              <label class="field">
+                Edad <span>*</span>
+                <input
+                  type="number"
+                  name="age"
+                  inputmode="numeric"
+                  placeholder="Ej. 12"
+                  min="0"
+                  max="110"
+                  required
+                />
+              </label>
+              <label class="field">
+                Teléfono de contacto <span>*</span>
+                <input
+                  name="phone"
+                  type="tel"
+                  autocomplete="tel"
+                  inputmode="tel"
+                  placeholder="Ej. 71234567"
+                  minlength="7"
+                  maxlength="20"
+                  required
+                />
+              </label>
+              <label class="field full">
+                Nombre del padre, madre, tutor o responsable <span>*</span>
+                <input
+                  name="guardian"
+                  autocomplete="off"
+                  placeholder="Nombres y apellidos del responsable"
+                  minlength="5"
+                  maxlength="120"
+                  required
+                />
+              </label>
+              <label class="field full">
+                Correo electrónico <small>(opcional)</small>
+                <input
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  placeholder="correo@ejemplo.com"
+                  maxlength="120"
+                />
+              </label>
+              <label class="field full">
+                Consulta o comentario <small>(opcional)</small>
+                <textarea
+                  name="notes"
+                  rows="3"
+                  maxlength="800"
+                  placeholder="¿Hay algo importante que debamos conocer?"
+                ></textarea>
+              </label>
+            </div>
+          </section>
+          <section class="form-step" data-step="3" hidden>
+            <h3>Revisa y confirma</h3>
+            <p class="field-intro">
+              Verifica que los datos sean correctos antes de enviar tu
+              solicitud.
+            </p>
+            <div class="review-box" id="review-box"></div>
+            <label class="checkbox-line">
+              <input type="checkbox" name="consent" required />
+              <span>
+                Autorizo a la parroquia a utilizar estos datos exclusivamente
+                para gestionar mi solicitud y contactarme sobre la preparación
+                sacramental. Soy mayor de edad o responsable del participante.{' '}
+                <a
+                  href="/privacidad"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="privacy-link"
+                >
+                  Leer información de privacidad
+                </a>
+                . <strong>*</strong>
+              </span>
+            </label>
+            <input
+              type="text"
+              name="website"
+              autocomplete="off"
+              tabindex="-1"
+              aria-hidden="true"
+              class="honeypot"
+            />
+          </section>
+          <p class="form-feedback" id="form-feedback" role="alert" hidden></p>
+          <div class="form-navigation">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="previous-step"
+              hidden
+            >
+              <Icon name="arrow-left" size={17} /> Anterior
+            </button>
+            <button type="button" class="btn btn-primary" id="next-step">
+              Continuar <Icon name="arrow" size={17} />
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              id="submit-registration"
+              hidden
+              disabled={!settings.registrationOpen}
+            >
+              Enviar solicitud <Icon name="arrow-up-right" size={17} />
+            </button>
+          </div>
+        </form>
+        <div class="success-card" id="success-card" hidden>
+          <span class="success-icon">
+            <Icon name="check-circle" size={52} />
+          </span>
+          <p class="eyebrow">SOLICITUD RECIBIDA</p>
+          <h2>
+            ¡Ya diste el <em>primer paso!</em>
+          </h2>
+          <p>
+            Guarda el siguiente código y el teléfono que registraste para
+            consultar tu estado.
+          </p>
+          <div class="receipt-code" id="receipt-code"></div>
+          <button type="button" class="copy-button" id="copy-code">
+            Copiar código <Icon name="file-text" size={17} />
+          </button>
+          <p class="fine-print">
+            Este comprobante no confirma una plaza ni una fecha de celebración.
+          </p>
+          <a href="/consultar" class="btn btn-primary">
+            Consultar estado <Icon name="arrow-up-right" size={17} />
+          </a>
+        </div>
+      </div>
+      <aside class="registration-aside" data-reveal>
+        <div class="registration-help">
+          <div class="help-icon">
+            <Icon name="shield-check" size={29} />
+          </div>
+          <h3>Estamos contigo en cada paso.</h3>
+          <p>
+            Tus datos se usarán para organizar tu preinscripción. La preparación
+            y los documentos serán validados por la parroquia.
+          </p>
+          <hr />
+          <p>
+            <Icon name="check" size={18} /> Solicitud inicial sin compromiso
+          </p>
+          <p>
+            <Icon name="check" size={18} /> Código de seguimiento
+          </p>
+          <p>
+            <Icon name="check" size={18} /> Atención personalizada
+          </p>
+        </div>
+        <div class="registration-questions">
+          <Icon name="circle-help" size={24} />
+          <h4>¿Prefieres hablar directamente?</h4>
+          <p>La secretaría podrá orientarte sobre fechas y documentos.</p>
+          <a href="/contacto">
+            Ver cómo contactarnos <Icon name="arrow-up-right" size={17} />
+          </a>
+        </div>
+      </aside>
+    </div>
+  </section>
+  <script>
+    let current = 1;
+    const form = document.getElementById('register-form');
+    const next = document.getElementById('next-step');
+    const previous = document.getElementById('previous-step');
+    const submit = document.getElementById('submit-registration');
+    const feedback = document.getElementById('form-feedback');
+    function showError(m) {
+      feedback.textContent = m;
+      feedback.hidden = false;
+    }
+    function clearError() {
+      feedback.hidden = true;
+      feedback.textContent = '';
+    }
+    function validStep() {
+      const section = form.querySelector(`[data-step="${current}"]`);
+      const fields = [
+        ...section.querySelectorAll('input:not(.honeypot),textarea'),
+      ];
+      if (
+        current === 1 &&
+        !form.querySelector('input[name="sacrament"]:checked')
+      ) {
+        showError('Selecciona un sacramento para continuar.');
+        return false;
+      }
+      for (const input of fields)
+        if (!input.checkValidity()) {
+          input.reportValidity();
+          return false;
+        }
+      return true;
+    }
+    function changeStep(step) {
+      current = step;
+      clearError();
+      document
+        .querySelectorAll('.form-step')
+        .forEach((x) => (x.hidden = Number(x.dataset.step) !== current));
+      document.querySelectorAll('[data-step-indicator]').forEach((x) => {
+        let n = Number(x.dataset.stepIndicator);
+        x.classList.toggle('current', n === current);
+        x.classList.toggle('finished', n < current);
+      });
+      previous.hidden = current === 1;
+      next.hidden = current === 3;
+      submit.hidden = current !== 3;
+      if (current === 3) {
+        const f = new FormData(form),
+          s = form.querySelector('input[name="sacrament"]:checked');
+        document.getElementById('review-box').innerHTML = '';
+        const rows = [
+          [
+            'Sacramento',
+            s?.closest('label')?.querySelector('strong')?.textContent || '',
+          ],
+          ['Participante', f.get('name')],
+          ['Edad', f.get('age') + ' años'],
+          ['Responsable', f.get('guardian')],
+          ['Teléfono', f.get('phone')],
+          ['Correo', f.get('email') || 'No indicado'],
+        ];
+        const box = document.getElementById('review-box');
+        for (const [a, b] of rows) {
+          const row = document.createElement('div');
+          const name = document.createElement('span');
+          const value = document.createElement('strong');
+          name.textContent = a;
+          value.textContent = String(b);
+          row.append(name, value);
+          box.append(row);
+        }
+      }
+    }
+    next.addEventListener('click', () => {
+      clearError();
+      if (validStep()) changeStep(current + 1);
+    });
+    previous.addEventListener('click', () => changeStep(current - 1));
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearError();
+      if (!validStep()) return;
+      const f = new FormData(form);
+      const body = Object.fromEntries(f.entries());
+      body.consent = form.elements.consent.checked;
+      submit.disabled = true;
+      submit.textContent = 'Enviando...';
+      try {
+        const res = await fetch('/api/inscripciones', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (!res.ok) throw Error(data.error || 'Error al enviar');
+        document.getElementById('receipt-code').textContent = data.code;
+        form.hidden = true;
+        document.querySelector('.wizard-progress').hidden = true;
+        document.getElementById('success-card').hidden = false;
+        document
+          .getElementById('copy-code')
+          .addEventListener('click', async () => {
+            await navigator.clipboard.writeText(data.code);
+            document.getElementById('copy-code').textContent = '¡Copiado!';
+          });
+        document
+          .querySelector('.success-card')
+          .scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } catch (err) {
+        showError(err.message);
+      } finally {
+        submit.disabled = false;
+        submit.textContent = 'Enviar solicitud ↗';
+      }
+    });
+    changeStep(1);
+  </script>
 </Layout>

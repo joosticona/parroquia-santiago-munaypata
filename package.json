@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=22.13.0"
+    "node": ">=22.22.0"
   },
   "scripts": {
     "dev": "astro dev --host 0.0.0.0",
@@ -12,14 +12,25 @@
     "preview": "astro preview --host 0.0.0.0",
     "start": "node ./dist/server/entry.mjs",
     "check": "astro check",
-    "test": "node scripts/smoke-test.mjs && node scripts/api-smoke-test.mjs"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "test": "bun scripts/smoke-test.mjs && bun scripts/api-smoke-test.mjs"
   },
   "dependencies": {
-    "astro": "^5.15.0",
-    "@astrojs/node": "^9.4.0"
+    "@astrojs/node": "^11.1.9",
+    "astro": "7.4.1"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.4",
+    "@astrojs/check": "^0.9.12",
+    "@eslint/js": "^10",
+    "eslint": "^10",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-astro": "^3.2.1",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "prettier-plugin-astro": "^1.1.2",
     "typescript": "^5.9.0"
   }
 }

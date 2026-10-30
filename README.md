@@ -1,6 +1,6 @@
 # Parroquia Apóstol Santiago de Munaypata
 
-Microaplicación de **preinscripciones sacramentales** y **centro de control parroquial**, desarrollada con **Astro 5 + HTML + CSS + JavaScript** y almacenamiento **SQLite local del servidor**.
+Microaplicación de **preinscripciones sacramentales** y **centro de control parroquial**, desarrollada con **Astro 7.4.1 + HTML + CSS + JavaScript** y almacenamiento **SQLite local del servidor**.
 
 Pensada para la comunidad de **Munaypata, La Paz, Bolivia**. El diseño se adapta a computadora, tablet y celular; incluye animaciones discretas y una opción de movimiento reducido respetada por el CSS.
 
@@ -8,16 +8,36 @@ Pensada para la comunidad de **Munaypata, La Paz, Bolivia**. El diseño se adapt
 
 ## 1. Instalación en tu PC (Windows / macOS / Linux)
 
-Necesitas **Node.js 22.13 o superior** (SQLite integrada en Node 22 aún emite una advertencia experimental) y conexión a Internet para descargar dependencias.
+Necesitas **Bun 1.4.3 o superior**, **Node.js 22.22 o superior** para las herramientas de Astro y conexión a Internet para descargar dependencias. Usa Bun como gestor de paquetes y conserva `bun.lock` para instalaciones reproducibles.
 
 ```bash
-npm install
+bun install
 ```
+
+### Versión de Astro y compatibilidad
+
+Astro está fijado en **7.4.1**, con `@astrojs/node` **11.1.9 o compatible** y `@astrojs/check` **0.9.12 o compatible**. Se conserva SSR en modo standalone y SQLite local. `compressHTML: true` mantiene el tratamiento de espacios anterior a Astro 7, evitando cambios de presentación entre elementos inline.
+
+La migración sigue las guías oficiales de [Astro 6](https://docs.astro.build/en/guides/upgrade-to/v6/), [Astro 7](https://docs.astro.build/en/guides/upgrade-to/v7/) y el [adaptador Node](https://docs.astro.build/en/guides/integrations-guide/node/). El requisito de Node.js **22.22.0+** corresponde a los metadatos de Astro 7.4.1.
+
+### Formato y calidad de código
+
+```bash
+bun run format
+bun run format:check
+bun run lint
+bun run lint:fix
+bun run check
+```
+
+Prettier incluye soporte para Astro y ESLint usa la configuración recomendada de JavaScript y Astro, sin reglas de formato que compitan con Prettier. Se excluyen las dependencias, la salida generada y los datos locales.
+
+Las pruebas se ejecutan con Bun, incluida su compatibilidad con `node:sqlite`. El servidor de producción conserva Node.js como runtime por el adaptador existente `@astrojs/node`.
 
 Copia `.env.example` a `.env` y cambia **obligatoriamente** las variables `ADMIN_PASSWORD` (contraseña única de 12+ caracteres) y `SESSION_SECRET` (secreto aleatorio de 32+ caracteres). No uses literalmente los valores de ejemplo.
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 Abre **http://localhost:4321**. La primera vez se genera automáticamente `data/parroquia.sqlite`.
@@ -40,16 +60,16 @@ Panel: `http://localhost:4321/admin/login`
 
 ## 3. Páginas públicas
 
-| Página | Función |
-|---|---|
-| `/` | Portada, sacramentos, pasos, horarios, avisos, invitación |
-| `/sacramentos` | Introducción a Bautismo, Primera Comunión, Confirmación y Matrimonio |
-| `/sacramentos/bautismo`, etc. | Página específica editable por sacramento |
-| `/inscripcion` | Formulario paso a paso, validación, consentimiento y código de seguimiento |
-| `/consultar` | Estado de preinscripción con código y teléfono completo |
-| `/horarios` | Celebraciones, catequesis y despacho |
-| `/vida-parroquial` | Avisos, eventos y galería de imágenes |
-| `/contacto` | Datos parroquiales, Facebook y vínculo a Google Maps |
+| Página                        | Función                                                                    |
+| ----------------------------- | -------------------------------------------------------------------------- |
+| `/`                           | Portada, sacramentos, pasos, horarios, avisos, invitación                  |
+| `/sacramentos`                | Introducción a Bautismo, Primera Comunión, Confirmación y Matrimonio       |
+| `/sacramentos/bautismo`, etc. | Página específica editable por sacramento                                  |
+| `/inscripcion`                | Formulario paso a paso, validación, consentimiento y código de seguimiento |
+| `/consultar`                  | Estado de preinscripción con código y teléfono completo                    |
+| `/horarios`                   | Celebraciones, catequesis y despacho                                       |
+| `/vida-parroquial`            | Avisos, eventos y galería de imágenes                                      |
+| `/contacto`                   | Datos parroquiales, Facebook y vínculo a Google Maps                       |
 
 La Reconciliación y Unción de los Enfermos aparecen como consulta directa a la parroquia, **no** como inscripciones ordinarias.
 
@@ -69,12 +89,12 @@ Las fotografías y PDF se guardan en `data/uploads/`. SQLite se guarda en `data/
 ## 5. Compilar y publicar
 
 ```bash
-npm run test
-npm run build
-npm run start
+bun run test
+bun run build
+bun run start
 ```
 
-Este proyecto utiliza `@astrojs/node` en modo SSR (`output: server`). **No es un sitio HTML estático**; necesita un servidor Node 22+ con almacenamiento persistente. En plataformas como Railway, Render (con disco persistente), un VPS o un servidor Node propio puedes configurar `ADMIN_PASSWORD`, `SESSION_SECRET` y `DATA_DIR` como variables de entorno. Detrás de un proxy HTTPS, establece además `PUBLIC_ORIGIN=https://tu-dominio.com` para validar correctamente los formularios y marcar las cookies como seguras.
+Este proyecto utiliza `@astrojs/node` en modo SSR (`output: server`). **No es un sitio HTML estático**; necesita un servidor Node 22.22+ con almacenamiento persistente. En plataformas como Railway, Render (con disco persistente), un VPS o un servidor Node propio puedes configurar `ADMIN_PASSWORD`, `SESSION_SECRET` y `DATA_DIR` como variables de entorno. Detrás de un proxy HTTPS, establece además `PUBLIC_ORIGIN=https://tu-dominio.com` para validar correctamente los formularios y marcar las cookies como seguras.
 
 - **Cloudflare Pages estático NO es compatible directamente** con este backend SQLite local y carga de archivos.
 - Puedes utilizar un dominio administrado en Cloudflare como proxy/DNS apuntando a tu servidor Node.
@@ -123,7 +143,9 @@ No se inventaron campañas de inscripción, fechas de catequesis, requisitos def
 
 ## 9. Comprobaciones realizadas durante la entrega
 
-- `npm run test`: **correcto**. Incluye pruebas de SQLite, seguridad de sesiones, validación de datos, API de preinscripciones, consulta de estados, ajustes, avisos y subida/servicio de imágenes.
+- `bun run test`: **correcto**. Incluye pruebas de SQLite, seguridad de sesiones, validación de datos, API de preinscripciones, consulta de estados, ajustes, avisos y subida/servicio de imágenes.
 - Sintaxis de JavaScript: comprobada con `node --check` y extracción de los scripts inline.
 - SVG de emblema e ilustración: renderizados e inspeccionados.
-- **Compilación Astro y revisión visual final en navegador: pendientes**, porque el entorno de elaboración no pudo resolver `registry.npmjs.org` para descargar las dependencias. Después de `npm install`, ejecutar `npm run build` y revisar la apariencia en dispositivos reales. No se debe interpretar el resultado de las pruebas de lógica como una compilación verificada.
+- `bun run format:check` y `bun run lint`: **correctos** con la configuración de Prettier y ESLint para Astro.
+- `bun run build`: **correcto**. La revisión visual final en dispositivos reales sigue pendiente.
+- `bun run check`: detecta errores de tipado DOM existentes en los scripts de consulta, inscripción y acceso administrativo; no impiden el lint ni la compilación y quedan fuera de esta configuración de herramientas.

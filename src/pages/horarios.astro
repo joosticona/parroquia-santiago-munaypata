@@ -2,11 +2,69 @@
 import Layout from '../components/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
-import {getAllContent} from '../lib/db.js';
-const {settings,horarios,eventos}=getAllContent();
+import { getAllContent } from '../lib/db.js';
+const { settings, horarios } = getAllContent();
 ---
-<Layout settings={settings} title="Horarios y celebraciones"><PageHero eyebrow="NOS ENCONTRAMOS EN COMUNIDAD" title="Horarios y celebraciones" description="La vida de fe se comparte. Aquí puedes consultar la programación disponible y cómo confirmar los horarios."/>
-<section class="section"><div class="container"><div class="section-top" data-reveal><div><p class="eyebrow"><span class="eyebrow-line"></span> NUESTRA AGENDA</p><h2>Nos vemos <em>en la parroquia.</em></h2></div><p class="section-aside">{settings.publicNotice}</p></div>
-<div class="times-grid">{horarios.map((h,i)=><article class="time-card" data-reveal style={`--stagger:${i*70}ms`}><div class="time-card-top"><span><Icon name="clock" size={21}/></span><small>{h.type}</small></div><h3>{h.title}</h3><p class="time-emphasis">{h.day}</p><strong>{h.time}</strong><p class="time-place"><Icon name="pin" size={15}/> {h.place}</p>{h.note&&<p class="time-note">{h.note}</p>}</article>)}</div></div></section>
-<section class="section section-muted"><div class="container contact-banner" data-reveal><div><p class="eyebrow">SECRETARÍA PARROQUIAL</p><h2>¿Necesitas confirmar <em>un horario?</em></h2><p>Atención: {settings.officeHours}. También puedes consultar por teléfono.</p></div><a href="/contacto" class="btn btn-primary">Ver contacto <Icon name="arrow-up-right" size={19}/></a></div></section>
+
+<Layout settings={settings} title="Horarios y celebraciones">
+  <PageHero
+    eyebrow="NOS ENCONTRAMOS EN COMUNIDAD"
+    title="Horarios y celebraciones"
+    description="La vida de fe se comparte. Aquí puedes consultar la programación disponible y cómo confirmar los horarios."
+  />
+  <section class="section">
+    <div class="container">
+      <div class="section-top" data-reveal>
+        <div>
+          <p class="eyebrow">
+            <span class="eyebrow-line"></span> NUESTRA AGENDA
+          </p>
+          <h2>
+            Nos vemos <em>en la parroquia.</em>
+          </h2>
+        </div>
+        <p class="section-aside">{settings.publicNotice}</p>
+      </div>
+      <div class="times-grid">
+        {horarios.map((h, i) => (
+          <article
+            class="time-card"
+            data-reveal
+            style={`--stagger:${i * 70}ms`}
+          >
+            <div class="time-card-top">
+              <span>
+                <Icon name="clock" size={21} />
+              </span>
+              <small>{h.type}</small>
+            </div>
+            <h3>{h.title}</h3>
+            <p class="time-emphasis">{h.day}</p>
+            <strong>{h.time}</strong>
+            <p class="time-place">
+              <Icon name="pin" size={15} /> {h.place}
+            </p>
+            {h.note && <p class="time-note">{h.note}</p>}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+  <section class="section section-muted">
+    <div class="container contact-banner" data-reveal>
+      <div>
+        <p class="eyebrow">SECRETARÍA PARROQUIAL</p>
+        <h2>
+          ¿Necesitas confirmar <em>un horario?</em>
+        </h2>
+        <p>
+          Atención: {settings.officeHours}. También puedes consultar por
+          teléfono.
+        </p>
+      </div>
+      <a href="/contacto" class="btn btn-primary">
+        Ver contacto <Icon name="arrow-up-right" size={19} />
+      </a>
+    </div>
+  </section>
 </Layout>

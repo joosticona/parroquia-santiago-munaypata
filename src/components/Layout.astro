@@ -2,35 +2,72 @@
 import Header from './Header.astro';
 import Footer from './Footer.astro';
 import '../styles/global.css';
-const {settings,title='Caminamos juntos en la fe',description='Parroquia Apóstol Santiago de Munaypata — sacramentos, inscripciones y vida comunitaria',hideChrome=false}=Astro.props;
-const pathname=Astro.url.pathname;
+const {
+  settings,
+  title = 'Caminamos juntos en la fe',
+  description = 'Parroquia Apóstol Santiago de Munaypata — sacramentos, inscripciones y vida comunitaria',
+  hideChrome = false,
+} = Astro.props;
+const pathname = Astro.url.pathname;
 ---
+
 <!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <meta name="theme-color" content={settings.mainColor}/>
-  <meta name="description" content={description}/>
-  <link rel="icon" type="image/svg+xml" href="/emblema.svg"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <title>{title} | Parroquia Apóstol Santiago</title>
-  
-</head>
-<body style={`--primary:${settings.mainColor};--accent:${settings.accentColor};`}>
-  {!hideChrome && <Header settings={settings} pathname={pathname}/>}
-  <main id="contenido"><slot/></main>
-  {!hideChrome && <Footer settings={settings}/>}
-  <script>
-    const menu=document.getElementById('menu-toggle');const nav=document.getElementById('main-menu');
-    menu?.addEventListener('click',()=>{const open=nav?.classList.toggle('nav-open');menu.setAttribute('aria-expanded',String(!!open));menu.setAttribute('aria-label',open?'Cerrar menú':'Abrir menú');});
-    const observer=new IntersectionObserver(entries=>entries.forEach(x=>{if(x.isIntersecting){x.target.classList.add('is-visible');observer.unobserve(x.target);}}),{threshold:.08,rootMargin:'0px 0px -25px 0px'});
-    document.querySelectorAll('[data-reveal]').forEach(el=>observer.observe(el));
-    document.querySelectorAll('.nav-links a').forEach(link=>link.addEventListener('click',()=>{nav?.classList.remove('nav-open');menu?.setAttribute('aria-expanded','false');}));
-    const header=document.getElementById('site-header');
-    window.addEventListener('scroll',()=>header?.classList.toggle('scrolled',window.scrollY>40),{passive:true});
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content={settings.mainColor} />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/emblema.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title} | Parroquia Apóstol Santiago</title>
+  </head>
+  <body
+    style={`--primary:${settings.mainColor};--accent:${settings.accentColor};`}
+  >
+    {!hideChrome && <Header settings={settings} pathname={pathname} />}
+    <main id="contenido">
+      <slot />
+    </main>
+    {!hideChrome && <Footer settings={settings} />}
+    <script>
+      const menu = document.getElementById('menu-toggle');
+      const nav = document.getElementById('main-menu');
+      menu?.addEventListener('click', () => {
+        const open = nav?.classList.toggle('nav-open');
+        menu.setAttribute('aria-expanded', String(!!open));
+        menu.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+      });
+      const observer = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((x) => {
+            if (x.isIntersecting) {
+              x.target.classList.add('is-visible');
+              observer.unobserve(x.target);
+            }
+          }),
+        { threshold: 0.08, rootMargin: '0px 0px -25px 0px' },
+      );
+      document
+        .querySelectorAll('[data-reveal]')
+        .forEach((el) => observer.observe(el));
+      document.querySelectorAll('.nav-links a').forEach((link) =>
+        link.addEventListener('click', () => {
+          nav?.classList.remove('nav-open');
+          menu?.setAttribute('aria-expanded', 'false');
+        }),
+      );
+      const header = document.getElementById('site-header');
+      window.addEventListener(
+        'scroll',
+        () => header?.classList.toggle('scrolled', window.scrollY > 40),
+        { passive: true },
+      );
+    </script>
+  </body>
 </html>

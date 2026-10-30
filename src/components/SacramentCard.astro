@@ -1,9 +1,28 @@
 ---
 import Icon from './Icon.astro';
-const {sacrament,index=0}=Astro.props;
+const { sacrament, index = 0 } = Astro.props;
 ---
-<article class="sacrament-card" data-reveal style={`--stagger:${index*85}ms`}>
-  <div class="sacrament-card-head"><span class="sacrament-symbol"><Icon name={sacrament.icon} size={29} stroke={1.4}/></span><span class="small-number">0{index+1} / 04</span></div>
-  <div><p class="eyebrow card-eyebrow">{sacrament.tag}</p><h3>{sacrament.title}</h3><p>{sacrament.description}</p></div>
-  <a href={`/sacramentos/${sacrament.id}`} class="round-link" aria-label={`Conocer ${sacrament.title}`}><span>Conocer más</span><span class="round-arrow"><Icon name="arrow-up-right" size={18}/></span></a>
+
+<article class="sacrament-card" data-reveal style={`--stagger:${index * 85}ms`}>
+  <div class="sacrament-card-head">
+    <span class="sacrament-symbol">
+      <Icon name={sacrament.icon} size={29} stroke={1.4} />
+    </span>
+    <span class="small-number">0{index + 1} / 04</span>
+  </div>
+  <div>
+    <p class="eyebrow card-eyebrow">{sacrament.tag}</p>
+    <h3>{sacrament.title}</h3>
+    <p>{sacrament.description}</p>
+  </div>
+  <a
+    href={`/sacramentos/${sacrament.id}`}
+    class="round-link"
+    aria-label={`Conocer ${sacrament.title}`}
+  >
+    <span>Conocer más</span>
+    <span class="round-arrow">
+      <Icon name="arrow-up-right" size={18} />
+    </span>
+  </a>
 </article>

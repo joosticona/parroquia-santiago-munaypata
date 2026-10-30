@@ -1,17 +1,75 @@
 ---
 import Icon from './Icon.astro';
-const {settings}=Astro.props;
+const { settings } = Astro.props;
 ---
+
 <footer class="site-footer">
   <div class="container footer-grid">
     <div class="footer-about">
-      <a class="footer-brand" href="/"><img src={settings.logo || '/emblema.svg'} alt="" width="48" height="48"/> <span><strong>{settings.name}</strong><small>{settings.subtitle}</small></span></a>
-      <p>Unidos por la fe, la esperanza y el servicio. Una comunidad para caminar juntos.</p>
-      <a class="footer-social" href={settings.facebook} target="_blank" rel="noopener noreferrer"><Icon name="facebook" size={18}/> Nuestra comunidad en Facebook <Icon name="arrow-up-right" size={14}/></a>
+      <a class="footer-brand" href="/">
+        <img
+          src={settings.logo || '/emblema.svg'}
+          alt=""
+          width="48"
+          height="48"
+        />{' '}
+        <span>
+          <strong>{settings.name}</strong>
+          <small>{settings.subtitle}</small>
+        </span>
+      </a>
+      <p>
+        Unidos por la fe, la esperanza y el servicio. Una comunidad para caminar
+        juntos.
+      </p>
+      <a
+        class="footer-social"
+        href={settings.facebook}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Icon name="facebook" size={18} /> Nuestra comunidad en Facebook{' '}
+        <Icon name="arrow-up-right" size={14} />
+      </a>
     </div>
-    <div><h4>Explorar</h4><a href="/sacramentos">Nuestros sacramentos</a><a href="/inscripcion">Preinscripciones</a><a href="/consultar">Consultar mi solicitud</a><a href="/vida-parroquial">Avisos y actividades</a></div>
-    <div><h4>La parroquia</h4><a href="/horarios">Horarios y celebraciones</a><a href="/contacto">Cómo encontrarnos</a><a href={settings.facebook} target="_blank" rel="noopener noreferrer">Facebook oficial</a><a href="/privacidad">Privacidad y datos</a><a href="/admin/login">Acceso administrativo</a></div>
-    <div><h4>Estamos cerca</h4><p class="footer-location"><Icon name="pin" size={18}/>{settings.address}</p><p class="footer-location"><Icon name="phone" size={18}/>{settings.phone}</p><a class="footer-social" href="/contacto">Ver información de contacto <Icon name="arrow-up-right" size={15}/></a></div>
+    <div>
+      <h4>Explorar</h4>
+      <a href="/sacramentos">Nuestros sacramentos</a>
+      <a href="/inscripcion">Preinscripciones</a>
+      <a href="/consultar">Consultar mi solicitud</a>
+      <a href="/vida-parroquial">Avisos y actividades</a>
+    </div>
+    <div>
+      <h4>La parroquia</h4>
+      <a href="/horarios">Horarios y celebraciones</a>
+      <a href="/contacto">Cómo encontrarnos</a>
+      <a href={settings.facebook} target="_blank" rel="noopener noreferrer">
+        Facebook oficial
+      </a>
+      <a href="/privacidad">Privacidad y datos</a>
+      <a href="/admin/login">Acceso administrativo</a>
+    </div>
+    <div>
+      <h4>Estamos cerca</h4>
+      <p class="footer-location">
+        <Icon name="pin" size={18} />
+        {settings.address}
+      </p>
+      <p class="footer-location">
+        <Icon name="phone" size={18} />
+        {settings.phone}
+      </p>
+      <a class="footer-social" href="/contacto">
+        Ver información de contacto <Icon name="arrow-up-right" size={15} />
+      </a>
+    </div>
   </div>
-  <div class="container footer-bottom"><span>© {new Date().getFullYear()} Parroquia Apóstol Santiago · Munaypata.</span><span>Hecho con fe, para nuestra comunidad <span class="star">✳</span></span></div>
+  <div class="container footer-bottom">
+    <span>
+      © {new Date().getFullYear()} Parroquia Apóstol Santiago · Munaypata.
+    </span>
+    <span>
+      Hecho con fe, para nuestra comunidad <span class="star">✳</span>
+    </span>
+  </div>
 </footer>

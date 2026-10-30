@@ -1,4 +1,7 @@
 ---
+import Eyebrow from '../../components/Eyebrow.astro';
+import Heading from '../../components/Heading.astro';
+import Action from '../../components/Action.astro';
 import Layout from '../../components/Layout.astro';
 import Icon from '../../components/Icon.astro';
 import { getAllContent } from '../../lib/db.js';
@@ -10,20 +13,20 @@ if (!s) return Astro.redirect('/sacramentos');
 <Layout settings={settings} title={s.title} description={s.description}>
   <section class="detail-hero">
     <div class="container detail-head">
-      <a href="/sacramentos" class="back-link">
+      <Action href="/sacramentos" class="back-link">
         <Icon name="arrow-left" size={16} /> Volver a sacramentos
-      </a>
+      </Action>
       <div class="detail-hero-grid">
         <div>
-          <p class="eyebrow light">
-            <span class="eyebrow-line"></span> {s.tag}
-          </p>
-          <h1>{s.title}</h1>
+          <Eyebrow class="light" line>
+            {s.tag}
+          </Eyebrow>
+          <Heading as="h1">{s.title}</Heading>
           <p>{s.description}</p>
           <div class="detail-hero-actions">
-            <a class="btn btn-gold" href={`/inscripcion?para=${s.id}`}>
+            <Action class="btn btn-gold" href={`/inscripcion?para=${s.id}`}>
               Iniciar preinscripción <Icon name="arrow-up-right" size={17} />
-            </a>
+            </Action>
           </div>
         </div>
         <div class="detail-symbol">
@@ -36,14 +39,12 @@ if (!s) return Astro.redirect('/sacramentos');
   <section class="section">
     <div class="container detail-body">
       <div class="detail-main" data-reveal>
-        <p class="eyebrow">
-          <span class="eyebrow-line"></span> SOBRE ESTE SACRAMENTO
-        </p>
-        <h2>
+        <Eyebrow line>SOBRE ESTE SACRAMENTO</Eyebrow>
+        <Heading as="h2">
           Un paso en tu <em>camino de fe.</em>
-        </h2>
+        </Heading>
         <p class="long-copy">{s.detail}</p>
-        <h3>Orientación y requisitos</h3>
+        <Heading as="h3">Orientación y requisitos</Heading>
         <p>
           La siguiente lista es orientativa y debe ser confirmada por la
           parroquia:
@@ -63,31 +64,31 @@ if (!s) return Astro.redirect('/sacramentos');
           <span class="aside-top-icon">
             <Icon name="calendar" size={26} />
           </span>
-          <p class="eyebrow">PREPARACIÓN</p>
-          <h3>{s.duration}</h3>
+          <Eyebrow>PREPARACIÓN</Eyebrow>
+          <Heading as="h3">{s.duration}</Heading>
           <p>Pregunta en secretaría por fechas y grupos disponibles.</p>
           <hr />
-          <p class="eyebrow">PREINSCRIPCIÓN</p>
+          <Eyebrow>PREINSCRIPCIÓN</Eyebrow>
           <strong>
             {settings.registrationOpen && s.open
               ? 'Disponible'
               : 'Por habilitar'}
           </strong>
-          <a
+          <Action
             href={`/inscripcion?para=${s.id}`}
             class="btn btn-primary full-btn"
           >
             Ver formulario <Icon name="arrow-up-right" size={17} />
-          </a>
+          </Action>
         </div>
         <div class="aside-help">
           <Icon name="phone" size={19} />
           <div>
             <strong>¿Tienes dudas?</strong>
             <p>Estamos aquí para ayudarte.</p>
-            <a href="/contacto">
+            <Action href="/contacto">
               Ir a contacto <Icon name="arrow" size={14} />
-            </a>
+            </Action>
           </div>
         </div>
       </aside>

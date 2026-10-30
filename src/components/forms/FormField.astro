@@ -1,0 +1,20 @@
+---
+const {
+  label,
+  full = false,
+  optional = false,
+  required = false,
+  multiline = false,
+  ...attributes
+} = Astro.props;
+---
+
+<label class:list={['field', { full }]}>
+  {label} {required && <span>*</span>}
+  {optional && <small>(opcional)</small>}
+  {multiline ? (
+    <textarea {...attributes} required={required}></textarea>
+  ) : (
+    <input {...attributes} required={required} />
+  )}
+</label>

@@ -1,0 +1,27 @@
+---
+import Icon from './Icon.astro';
+import Heading from './Heading.astro';
+const { schedule: h } = Astro.props;
+---
+
+<div class="schedule-row">
+  <div class="schedule-icon">
+    <Icon
+      name={
+        h.type === 'Atención'
+          ? 'users'
+          : h.type === 'Catequesis'
+            ? 'book-open'
+            : 'calendar'
+      }
+      size={22}
+    />
+  </div>
+  <div>
+    <Heading as="h3">{h.title}</Heading>
+    <p>
+      {h.day} · {h.place}
+    </p>
+  </div>
+  <strong>{h.time}</strong>
+</div>

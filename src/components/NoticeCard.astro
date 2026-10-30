@@ -1,0 +1,27 @@
+---
+import Icon from './Icon.astro';
+import Action from './Action.astro';
+import Image from './Image.astro';
+import Heading from './Heading.astro';
+const { notice: n } = Astro.props;
+---
+
+<article class="notice-card" data-reveal>
+  {n.image && <Image src={n.image} alt={n.title} loading="lazy" />}
+  <div>
+    <span class="pill">{n.category}</span>
+    {n.date && <span class="notice-date">{n.date}</span>}
+    <Heading as="h3">{n.title}</Heading>
+    <p>{n.description}</p>
+    {n.document && (
+      <Action
+        class="notice-document"
+        href={n.document}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Ver boletín en PDF <Icon name="external-link" size={16} />
+      </Action>
+    )}
+  </div>
+</article>

@@ -1,4 +1,12 @@
 ---
+import JourneyStep from '../components/JourneyStep.astro';
+import EmptyState from '../components/EmptyState.astro';
+import NewsCard from '../components/NewsCard.astro';
+import ScheduleRow from '../components/ScheduleRow.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Heading from '../components/Heading.astro';
+import Action from '../components/Action.astro';
+import Image from '../components/Image.astro';
 import Layout from '../components/Layout.astro';
 import Icon from '../components/Icon.astro';
 import SacramentCard from '../components/SacramentCard.astro';
@@ -18,21 +26,21 @@ const { settings, sacramentos, horarios, avisos } = getAllContent();
           <span class="sparkle-dot">✳</span> {settings.subtitle.toUpperCase()}{' '}
           <span class="kicker-line"></span> UN HOGAR PARA TODOS
         </div>
-        <h1 data-reveal>
+        <Heading as="h1" data-reveal>
           {settings.tagline.split(' ').slice(0, -2).join(' ')}{' '}
           <em>{settings.tagline.split(' ').slice(-2).join(' ')}</em>
           <span class="title-period">.</span>
-        </h1>
+        </Heading>
         <p class="hero-description" data-reveal>
           {settings.heroDescription}
         </p>
         <div class="hero-actions" data-reveal>
-          <a href="/inscripcion" class="btn btn-gold">
+          <Action href="/inscripcion" class="btn btn-gold">
             Iniciar preinscripción <Icon name="arrow-up-right" size={19} />
-          </a>
-          <a href="/sacramentos" class="btn btn-ghost-light">
+          </Action>
+          <Action href="/sacramentos" class="btn btn-ghost-light">
             Explorar sacramentos <Icon name="arrow" size={18} />
-          </a>
+          </Action>
         </div>
         <div class="hero-signature" data-reveal>
           <div class="signature-symbol">✝</div>
@@ -46,13 +54,13 @@ const { settings, sacramentos, horarios, avisos } = getAllContent();
         <div class="art-ring ring-a"></div>
         <div class="art-ring ring-b"></div>
         {settings.heroImage ? (
-          <img
+          <Image
             class="hero-church hero-custom-photo"
             src={settings.heroImage}
             alt="Fotografía de la parroquia"
           />
         ) : (
-          <img
+          <Image
             class="hero-church"
             src="/templo-ilustracion.svg"
             alt="Ilustración simbólica de un templo católico"
@@ -89,30 +97,28 @@ const { settings, sacramentos, horarios, avisos } = getAllContent();
       <p>
         Una parroquia, muchas historias. <strong>Un mismo camino de fe.</strong>
       </p>
-      <a href="/contacto">
+      <Action href="/contacto">
         Conoce nuestra comunidad <Icon name="arrow-up-right" size={18} />
-      </a>
+      </Action>
     </div>
   </section>
   <section class="section section-sacraments" id="sacramentos">
     <div class="container">
       <div class="section-top" data-reveal>
         <div>
-          <p class="eyebrow">
-            <span class="eyebrow-line"></span> TU CAMINO ESPIRITUAL
-          </p>
-          <h2>
+          <Eyebrow line>TU CAMINO ESPIRITUAL</Eyebrow>
+          <Heading as="h2">
             Momentos que <em>transforman</em> la vida.
-          </h2>
+          </Heading>
         </div>
         <div class="section-aside">
           <p>
             Te acompañamos en cada etapa de la vida cristiana con orientación y
             cercanía.
           </p>
-          <a class="text-link" href="/sacramentos">
+          <Action class="text-link" href="/sacramentos">
             Ver todos los sacramentos <Icon name="arrow-up-right" size={17} />
-          </a>
+          </Action>
         </div>
       </div>
       <div class="sacrament-grid">
@@ -135,87 +141,49 @@ const { settings, sacramentos, horarios, avisos } = getAllContent();
         <span class="journey-visual-bottom">FE · ESPERANZA · AMOR</span>
       </div>
       <div class="journey-content" data-reveal>
-        <p class="eyebrow">
-          <span class="eyebrow-line"></span> FÁCIL Y A TU RITMO
-        </p>
-        <h2>
+        <Eyebrow line>FÁCIL Y A TU RITMO</Eyebrow>
+        <Heading as="h2">
           Tu primer paso <em>es muy sencillo.</em>
-        </h2>
+        </Heading>
         <p class="section-lede">
           Queremos que el proceso de preinscripción sea claro, humano y sin
           complicaciones.
         </p>
         <div class="steps">
-          <div class="step">
-            <span>01</span>
-            <div>
-              <h3>Elige tu sacramento</h3>
-              <p>Conoce la preparación y los requisitos orientativos.</p>
-            </div>
-          </div>
-          <div class="step">
-            <span>02</span>
-            <div>
-              <h3>Completa tus datos</h3>
-              <p>Envíanos la información básica de tu solicitud.</p>
-            </div>
-          </div>
-          <div class="step">
-            <span>03</span>
-            <div>
-              <h3>Recibe seguimiento</h3>
-              <p>
-                Consulta el estado con tu código y la secretaría te orientará.
-              </p>
-            </div>
-          </div>
+          <JourneyStep number="01" title="Elige tu sacramento">
+            Conoce la preparación y los requisitos orientativos.
+          </JourneyStep>
+          <JourneyStep number="02" title="Completa tus datos">
+            Envíanos la información básica de tu solicitud.
+          </JourneyStep>
+          <JourneyStep number="03" title="Recibe seguimiento">
+            Consulta el estado con tu código y la secretaría te orientará.
+          </JourneyStep>
         </div>
-        <a href="/inscripcion" class="btn btn-primary">
+        <Action href="/inscripcion" class="btn btn-primary">
           Comenzar ahora <Icon name="arrow-up-right" size={19} />
-        </a>
+        </Action>
       </div>
     </div>
   </section>
   <section class="section schedule-section">
     <div class="container schedule-grid">
       <div class="schedule-copy" data-reveal>
-        <p class="eyebrow">
-          <span class="eyebrow-line"></span> ENCUÉNTRANOS
-        </p>
-        <h2>
+        <Eyebrow line>ENCUÉNTRANOS</Eyebrow>
+        <Heading as="h2">
           Siempre hay un <em>momento para Dios.</em>
-        </h2>
+        </Heading>
         <p>
           Descubre nuestras celebraciones y actividades. Los horarios deben
           confirmarse antes de asistir.
         </p>
-        <a href="/horarios" class="text-link">
+        <Action href="/horarios" class="text-link">
           Consultar todos los horarios <Icon name="arrow-up-right" size={18} />
-        </a>
+        </Action>
       </div>
       <div class="schedule-list" data-reveal>
         {horarios.slice(0, 3).map((h) => (
-          <div class="schedule-row">
-            <div class="schedule-icon">
-              <Icon
-                name={
-                  h.type === 'Atención'
-                    ? 'users'
-                    : h.type === 'Catequesis'
-                      ? 'book-open'
-                      : 'calendar'
-                }
-                size={22}
-              />
-            </div>
-            <div>
-              <h3>{h.title}</h3>
-              <p>
-                {h.day} · {h.place}
-              </p>
-            </div>
-            <strong>{h.time}</strong>
-          </div>
+          <ScheduleRow schedule={h} />
         ))}
       </div>
     </div>
@@ -224,44 +192,23 @@ const { settings, sacramentos, horarios, avisos } = getAllContent();
     <div class="container">
       <div class="section-top" data-reveal>
         <div>
-          <p class="eyebrow">
-            <span class="eyebrow-line"></span> VIDA PARROQUIAL
-          </p>
-          <h2>
+          <Eyebrow line>VIDA PARROQUIAL</Eyebrow>
+          <Heading as="h2">
             Lo que vivimos <em>juntos.</em>
-          </h2>
+          </Heading>
         </div>
-        <a href="/vida-parroquial" class="text-link">
+        <Action href="/vida-parroquial" class="text-link">
           Más avisos y actividades <Icon name="arrow-up-right" size={18} />
-        </a>
+        </Action>
       </div>
       <div class="news-grid">
         {avisos.slice(0, 3).map((n, i) => (
-          <article
-            class="news-card"
-            data-reveal
-            style={`--stagger:${i * 90}ms`}
-          >
-            <div
-              class="news-card-art"
-              style={n.image ? `background-image:url('${n.image}')` : ''}
-            >
-              <span class="news-visual-flower">✳</span>
-              <span class="news-label">{n.category || 'Comunidad'}</span>
-            </div>
-            <div class="news-card-body">
-              <h3>{n.title}</h3>
-              <p>{n.description}</p>
-              <a href="/vida-parroquial">
-                Ver novedades <Icon name="arrow-up-right" size={16} />
-              </a>
-            </div>
-          </article>
+          <NewsCard notice={n} index={i} />
         ))}
         {avisos.length === 0 && (
-          <div class="empty-state">
+          <EmptyState>
             Pronto compartiremos novedades de nuestra parroquia.
-          </div>
+          </EmptyState>
         )}
       </div>
     </div>
@@ -269,18 +216,18 @@ const { settings, sacramentos, horarios, avisos } = getAllContent();
   <section class="community-cta">
     <div class="container community-cta-inner" data-reveal>
       <div class="cta-cross">✳</div>
-      <p class="eyebrow light">ESTAMOS AQUÍ PARA TI</p>
-      <h2>
+      <Eyebrow class="light">ESTAMOS AQUÍ PARA TI</Eyebrow>
+      <Heading as="h2">
         Tu historia también <em>es parte de la nuestra.</em>
-      </h2>
+      </Heading>
       <p>Hay un lugar para ti y tu familia en nuestra comunidad.</p>
       <div class="cta-actions">
-        <a href="/inscripcion" class="btn btn-gold">
+        <Action href="/inscripcion" class="btn btn-gold">
           Preinscribirme <Icon name="arrow-up-right" size={19} />
-        </a>
-        <a href="/contacto" class="btn btn-outline-white">
+        </Action>
+        <Action href="/contacto" class="btn btn-outline-white">
           Hablar con la parroquia
-        </a>
+        </Action>
       </div>
     </div>
   </section>

@@ -1,0 +1,14 @@
+---
+import Heading from './Heading.astro';
+const { number, title } = Astro.props;
+---
+
+<div class="step">
+  <span>{number}</span>
+  <div>
+    <Heading as="h3">{title}</Heading>
+    <p>
+      <slot />
+    </p>
+  </div>
+</div>

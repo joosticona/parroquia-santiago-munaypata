@@ -1,0 +1,8 @@
+---
+const { href, type = 'button', ...attributes } = Astro.props;
+const Tag = href !== undefined ? 'a' : 'button';
+---
+
+<Tag {...attributes} {...(href !== undefined ? { href } : { type })}>
+  <slot />
+</Tag>

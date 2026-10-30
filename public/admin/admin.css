@@ -1,0 +1,202 @@
+/* Admin-only overrides; shared site styles remain unchanged. */
+.admin-body [hidden] {
+  display: none !important;
+}
+.admin-body :is(button, a, input, select, textarea):focus-visible,
+.login-shell :is(button, a, input):focus-visible {
+  outline: 3px solid #976325;
+  outline-offset: 3px;
+}
+.admin-body :is(button, a),
+.login-shell button {
+  touch-action: manipulation;
+}
+.admin-body button:disabled,
+.login-shell button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+.admin-mobile-toggle,
+.admin-sidebar-close,
+.modal-close {
+  min-width: 44px;
+  min-height: 44px;
+}
+.admin-sidebar-close {
+  display: none;
+}
+.admin-skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 200;
+  padding: 12px;
+  background: white;
+  color: #193e45;
+  transform: translateY(-150%);
+}
+.admin-skip-link:focus {
+  transform: none;
+}
+.admin-body :is(.collection-actions button, .admin-edit-link, .danger-text) {
+  min-height: 44px;
+}
+.admin-body
+  :is(.collection-card, .admin-panel, .overview-stat, .admin-page-head > div) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.admin-body
+  :is(
+    .collection-card > p,
+    .collection-meta,
+    .fine-print,
+    .request-details > div span,
+    .admin-panel-head p
+  ) {
+  color: #52675b;
+}
+.admin-body .collection-chip {
+  color: #735b38;
+}
+.admin-body .upload-control > input {
+  min-width: 0;
+  width: 100%;
+  flex-basis: 150px;
+}
+.admin-body .upload-button {
+  position: relative;
+  white-space: normal;
+  min-height: 44px;
+}
+.admin-body .upload-button input {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.admin-body .upload-button:focus-within {
+  outline: 3px solid #976325;
+  outline-offset: 3px;
+}
+.admin-body .modal-card {
+  max-height: calc(100dvh - 32px);
+}
+.admin-body .modal-head {
+  flex-shrink: 0;
+  gap: 12px;
+}
+.admin-body .modal-form {
+  min-height: 0;
+}
+.admin-body .modal-actions {
+  flex-wrap: wrap;
+}
+.admin-body .admin-table-scroll:focus-visible {
+  outline: 3px solid #976325;
+  outline-offset: -3px;
+}
+.admin-body .admin-search {
+  min-width: 0;
+}
+.admin-body .admin-search input {
+  width: 100%;
+  min-width: 0;
+}
+.admin-body .admin-breadcrumb {
+  color: #52675b;
+}
+.admin-body .recent-row {
+  flex-wrap: wrap;
+}
+.admin-body .recent-row > div {
+  min-width: 0;
+}
+.login-shell {
+  overflow-wrap: anywhere;
+}
+.login-shell .login-form-container {
+  min-width: 0;
+}
+@media (max-width: 700px) {
+  .admin-body .admin-sidebar:not(.sidebar-visible) {
+    visibility: hidden;
+  }
+  .admin-body .admin-sidebar {
+    max-width: calc(100vw - 20px);
+  }
+  .admin-sidebar-close {
+    display: grid;
+    place-items: center;
+    align-self: flex-end;
+    border: 1px solid #aec3bb;
+    background: transparent;
+    color: white;
+    border-radius: 5px;
+  }
+  .admin-body .admin-topbar-left {
+    gap: 10px;
+    min-width: 0;
+  }
+  .admin-body .admin-topbar {
+    padding: 0 12px;
+    gap: 8px;
+  }
+  .admin-body .overview-stats,
+  .admin-body .overview-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-body .admin-toolbar select {
+    width: 100%;
+  }
+  .admin-body .settings-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-body .admin-field input,
+  .admin-body .admin-field textarea,
+  .admin-body .admin-field select,
+  .admin-body .admin-toolbar input,
+  .admin-body .admin-toolbar select,
+  .login-shell input {
+    font-size: 16px;
+  }
+}
+@media (max-width: 480px) {
+  .admin-body .collection-grid,
+  .admin-body .collection-grid.two-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-body .collection-card-top {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .admin-body .request-details {
+    padding: 14px;
+  }
+  .admin-body .request-details > div {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .admin-body .request-details > div strong {
+    max-width: 100%;
+    text-align: left;
+  }
+  .admin-body .modal-actions .btn {
+    width: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-body *,
+  .admin-body *::before,
+  .admin-body *::after,
+  .login-shell *,
+  .login-shell *::before,
+  .login-shell *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

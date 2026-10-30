@@ -1,0 +1,24 @@
+---
+import Icon from './Icon.astro';
+import Heading from './Heading.astro';
+import Action from './Action.astro';
+const { icon, title, description } = Astro.props;
+---
+
+<div>
+  <span>
+    <Icon name={icon} size={24} />
+  </span>
+  <div>
+    <Heading as="h3">{title}</Heading>
+    <p>
+      {icon === 'phone' ? (
+        <Action href={`tel:${String(description).replace(/[^+\d]/g, '')}`}>
+          {description}
+        </Action>
+      ) : (
+        description
+      )}
+    </p>
+  </div>
+</div>

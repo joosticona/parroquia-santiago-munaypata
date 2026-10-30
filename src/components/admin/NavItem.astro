@@ -1,0 +1,13 @@
+---
+import Action from '../Action.astro';
+import Icon from '../Icon.astro';
+const { view, icon, selected = false } = Astro.props;
+---
+
+<Action
+  data-view={view}
+  class={selected ? 'selected' : undefined}
+  aria-current={selected ? 'page' : undefined}
+>
+  <Icon name={icon} size={19} /> <slot />
+</Action>

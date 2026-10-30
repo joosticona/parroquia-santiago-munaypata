@@ -1,4 +1,7 @@
 ---
+import Eyebrow from './Eyebrow.astro';
+import Heading from './Heading.astro';
+import Action from './Action.astro';
 import Icon from './Icon.astro';
 const { sacrament, index = 0 } = Astro.props;
 ---
@@ -11,11 +14,11 @@ const { sacrament, index = 0 } = Astro.props;
     <span class="small-number">0{index + 1} / 04</span>
   </div>
   <div>
-    <p class="eyebrow card-eyebrow">{sacrament.tag}</p>
-    <h3>{sacrament.title}</h3>
+    <Eyebrow class="card-eyebrow">{sacrament.tag}</Eyebrow>
+    <Heading as="h3">{sacrament.title}</Heading>
     <p>{sacrament.description}</p>
   </div>
-  <a
+  <Action
     href={`/sacramentos/${sacrament.id}`}
     class="round-link"
     aria-label={`Conocer ${sacrament.title}`}
@@ -24,5 +27,5 @@ const { sacrament, index = 0 } = Astro.props;
     <span class="round-arrow">
       <Icon name="arrow-up-right" size={18} />
     </span>
-  </a>
+  </Action>
 </article>

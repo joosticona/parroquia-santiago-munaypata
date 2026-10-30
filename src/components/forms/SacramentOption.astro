@@ -1,0 +1,23 @@
+---
+import Icon from '../Icon.astro';
+const { sacrament, selected = '' } = Astro.props;
+---
+
+<label class="option-card">
+  <input
+    type="radio"
+    name="sacrament"
+    value={sacrament.id}
+    checked={sacrament.id === selected}
+    disabled={!sacrament.open}
+    required
+  />
+  <span class="option-symbol">
+    <Icon name={sacrament.icon} size={27} />
+  </span>
+  <span>
+    <strong>{sacrament.title}</strong>
+    <small>{sacrament.open ? sacrament.tag : 'No disponible'}</small>
+  </span>
+  <Icon name="check-circle" class="option-check" size={22} />
+</label>

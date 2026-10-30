@@ -132,6 +132,18 @@ scripts/smoke-test.mjs
 data/                 # Base de datos y archivos (privados, no subir a Git)
 ```
 
+## Componentes y efectos visuales
+
+Las reglas de [AGENTS.md](./AGENTS.md) se aplican a las páginas públicas y al panel administrativo. Antes de añadir interfaz, reutiliza los componentes de `src/components/` y los renderizadores del panel en `public/admin/`.
+
+- `Action`, `Heading`, `Eyebrow` e `Image` mantienen los elementos semánticos y permiten conservar clases, atributos, accesibilidad y contenido mediante slots.
+- `SacramentCard`, `NewsCard`, `NoticeCard`, `EventCard`, `ScheduleCard`, `ScheduleRow`, `ContactItem`, `JourneyStep` y `EmptyState` encapsulan patrones de presentación reutilizables.
+- Los campos públicos se mantienen en `src/components/forms/`; los componentes específicos del panel, en `src/components/admin/`.
+- Los textos y contenedores exclusivos de una sección permanecen junto a su contenido cuando extraerlos no aporta reutilización. No se crea un componente por cada etiqueta HTML aislada.
+- `bun run test` incluye regresiones de los renderizadores administrativos: escape de contenido, atributos, variantes de campos, colecciones, estados y resúmenes.
+- `AGENTS.md` se excluye de Prettier para conservar literalmente el texto y la separación de reglas solicitados.
+- Los efectos se implementan con CSS nativo. JavaScript se limita a interacción, navegación y detección de visibilidad; el movimiento reducido desactiva animaciones decorativas y desplazamiento suave, incluso si la preferencia cambia durante la sesión.
+
 ## 8. Referencias públicas consultadas
 
 - [Facebook oficial proporcionado](https://www.facebook.com/pquiaapostolsantiago.munaypata) — no fue posible inspeccionar de forma fiable el perfil ni extraer el logo.
@@ -141,6 +153,16 @@ data/                 # Base de datos y archivos (privados, no subir a Git)
 
 No se inventaron campañas de inscripción, fechas de catequesis, requisitos definitivos ni datos personales. Los textos de requisitos en los sacramentos son **orientativos** y editables desde el panel.
 
+## Revisión responsive y accesibilidad
+
+- El menú público admite cierre con Escape, clic fuera y cambio al ancho de escritorio; mantiene sincronizados su nombre accesible y `aria-expanded`. En pantallas de poca altura tiene desplazamiento propio.
+- La navegación incluye un enlace para saltar al contenido, indicadores de foco y `aria-current`. Los formularios reorganizan sus columnas en tablet y usan campos de 16 px en móvil para evitar el zoom automático de iOS.
+- La preinscripción lleva el foco al encabezado de cada paso, conserva la revisión de datos largos y respeta el bloqueo de inscripciones. La consulta anuncia los resultados y muestra un estado de carga.
+- Los estilos específicos de administración están en `public/admin/admin.css`; incluyen navegación móvil, modales, tablas y estados accesibles, sin alterar la identidad del sitio público.
+- Comprobación en navegador: 13 rutas públicas y de acceso, en anchos de 320, 375, 768, 1024 y 1440 px (65 combinaciones), sin scroll horizontal, imágenes rotas ni excepciones JavaScript. Se probaron los pasos del formulario sin enviar solicitudes y la consulta con respuesta simulada. Las pruebas administrativas usaron una interfaz de prueba con API interceptada, sin escribir datos reales.
+- No existe un selector de tema oscuro/claro en el sitio actual. Se conserva el tema claro y se declara explícitamente para evitar controles nativos oscuros sobre formularios claros; no se añade un rediseño de tema.
+- El acceso administrativo requiere `ADMIN_PASSWORD` y `SESSION_SECRET`. Mientras no estén configurados y las preinscripciones sigan cerradas, las comprobaciones no sustituyen una prueba final autenticada con la configuración de producción ni pruebas en dispositivos físicos.
+
 ## 9. Comprobaciones realizadas durante la entrega
 
 - `bun run test`: **correcto**. Incluye pruebas de SQLite, seguridad de sesiones, validación de datos, API de preinscripciones, consulta de estados, ajustes, avisos y subida/servicio de imágenes.
@@ -148,4 +170,5 @@ No se inventaron campañas de inscripción, fechas de catequesis, requisitos def
 - SVG de emblema e ilustración: renderizados e inspeccionados.
 - `bun run format:check` y `bun run lint`: **correctos** con la configuración de Prettier y ESLint para Astro.
 - `bun run build`: **correcto**. La revisión visual final en dispositivos reales sigue pendiente.
-- `bun run check`: detecta errores de tipado DOM existentes en los scripts de consulta, inscripción y acceso administrativo; no impiden el lint ni la compilación y quedan fuera de esta configuración de herramientas.
+- `bun run check`: **correcto**, con 0 errores y 0 advertencias. Se conservan los hints informativos; la extracción de componentes puede redistribuirlos (23 en la validación actual). Los formularios de consulta, inscripción y acceso administrativo comprueban los tipos DOM sin desactivar reglas.
+- Formularios verificados en navegador con datos temporales: validación, avance, resumen y retroceso de inscripción, envío con consentimiento y recibo, consulta de estado y acceso administrativo con reintento tras contraseña incorrecta.

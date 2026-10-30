@@ -1,4 +1,7 @@
 ---
+import Eyebrow from './Eyebrow.astro';
+import Heading from './Heading.astro';
+import Action from './Action.astro';
 import Icon from './Icon.astro';
 const { eyebrow, title, description, breadcrumb = '' } = Astro.props;
 ---
@@ -6,14 +9,16 @@ const { eyebrow, title, description, breadcrumb = '' } = Astro.props;
 <section class="page-hero">
   <div class="container page-hero-inner">
     <div class="breadcrumbs">
-      <a href="/">Inicio</a>
+      <Action href="/">Inicio</Action>
       <Icon name="arrow" size={13} />
       <span>{breadcrumb || title}</span>
     </div>
-    <p class="eyebrow light" data-reveal>
-      <span class="eyebrow-line"></span> {eyebrow}
-    </p>
-    <h1 data-reveal>{title}</h1>
+    <Eyebrow class="light" line data-reveal>
+      {eyebrow}
+    </Eyebrow>
+    <Heading as="h1" data-reveal>
+      {title}
+    </Heading>
     <p class="page-hero-description" data-reveal>
       {description}
     </p>

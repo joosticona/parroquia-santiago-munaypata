@@ -1,4 +1,7 @@
 ---
+import Eyebrow from '../../components/Eyebrow.astro';
+import Heading from '../../components/Heading.astro';
+import Action from '../../components/Action.astro';
 import Layout from '../../components/Layout.astro';
 import PageHero from '../../components/PageHero.astro';
 import SacramentCard from '../../components/SacramentCard.astro';
@@ -17,12 +20,10 @@ const { settings, sacramentos } = getAllContent();
     <div class="container">
       <div class="section-top" data-reveal>
         <div>
-          <p class="eyebrow">
-            <span class="eyebrow-line"></span> TE ACOMPAÑAMOS
-          </p>
-          <h2>
+          <Eyebrow line>TE ACOMPAÑAMOS</Eyebrow>
+          <Heading as="h2">
             Crecemos <em>en comunidad.</em>
-          </h2>
+          </Heading>
         </div>
         <p class="section-aside">
           Elige el sacramento sobre el que deseas conocer los pasos, preparación
@@ -40,16 +41,18 @@ const { settings, sacramentos } = getAllContent();
     <div class="container note-grid">
       <Icon name="circle-help" size={33} />
       <div>
-        <h3>¿Buscas Reconciliación o Unción de los Enfermos?</h3>
+        <Heading as="h3">
+          ¿Buscas Reconciliación o Unción de los Enfermos?
+        </Heading>
         <p>
           Estos sacramentos no se gestionan mediante el formulario de
           preinscripción. Contacta directamente con la secretaría para
           orientación y acompañamiento pastoral.
         </p>
       </div>
-      <a href="/contacto" class="btn btn-primary">
+      <Action href="/contacto" class="btn btn-primary">
         Contactar <Icon name="arrow-up-right" size={17} />
-      </a>
+      </Action>
     </div>
   </section>
 </Layout>

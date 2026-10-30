@@ -1,4 +1,7 @@
 ---
+import Heading from './Heading.astro';
+import Action from './Action.astro';
+import Image from './Image.astro';
 import Icon from './Icon.astro';
 const { settings } = Astro.props;
 ---
@@ -6,8 +9,8 @@ const { settings } = Astro.props;
 <footer class="site-footer">
   <div class="container footer-grid">
     <div class="footer-about">
-      <a class="footer-brand" href="/">
-        <img
+      <Action class="footer-brand" href="/">
+        <Image
           src={settings.logo || '/emblema.svg'}
           alt=""
           width="48"
@@ -17,12 +20,12 @@ const { settings } = Astro.props;
           <strong>{settings.name}</strong>
           <small>{settings.subtitle}</small>
         </span>
-      </a>
+      </Action>
       <p>
         Unidos por la fe, la esperanza y el servicio. Una comunidad para caminar
         juntos.
       </p>
-      <a
+      <Action
         class="footer-social"
         href={settings.facebook}
         target="_blank"
@@ -30,27 +33,31 @@ const { settings } = Astro.props;
       >
         <Icon name="facebook" size={18} /> Nuestra comunidad en Facebook{' '}
         <Icon name="arrow-up-right" size={14} />
-      </a>
+      </Action>
     </div>
     <div>
-      <h4>Explorar</h4>
-      <a href="/sacramentos">Nuestros sacramentos</a>
-      <a href="/inscripcion">Preinscripciones</a>
-      <a href="/consultar">Consultar mi solicitud</a>
-      <a href="/vida-parroquial">Avisos y actividades</a>
+      <Heading as="h4">Explorar</Heading>
+      <Action href="/sacramentos">Nuestros sacramentos</Action>
+      <Action href="/inscripcion">Preinscripciones</Action>
+      <Action href="/consultar">Consultar mi solicitud</Action>
+      <Action href="/vida-parroquial">Avisos y actividades</Action>
     </div>
     <div>
-      <h4>La parroquia</h4>
-      <a href="/horarios">Horarios y celebraciones</a>
-      <a href="/contacto">Cómo encontrarnos</a>
-      <a href={settings.facebook} target="_blank" rel="noopener noreferrer">
+      <Heading as="h4">La parroquia</Heading>
+      <Action href="/horarios">Horarios y celebraciones</Action>
+      <Action href="/contacto">Cómo encontrarnos</Action>
+      <Action
+        href={settings.facebook}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         Facebook oficial
-      </a>
-      <a href="/privacidad">Privacidad y datos</a>
-      <a href="/admin/login">Acceso administrativo</a>
+      </Action>
+      <Action href="/privacidad">Privacidad y datos</Action>
+      <Action href="/admin/login">Acceso administrativo</Action>
     </div>
     <div>
-      <h4>Estamos cerca</h4>
+      <Heading as="h4">Estamos cerca</Heading>
       <p class="footer-location">
         <Icon name="pin" size={18} />
         {settings.address}
@@ -59,9 +66,9 @@ const { settings } = Astro.props;
         <Icon name="phone" size={18} />
         {settings.phone}
       </p>
-      <a class="footer-social" href="/contacto">
+      <Action class="footer-social" href="/contacto">
         Ver información de contacto <Icon name="arrow-up-right" size={15} />
-      </a>
+      </Action>
     </div>
   </div>
   <div class="container footer-bottom">

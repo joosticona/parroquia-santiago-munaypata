@@ -2,6 +2,13 @@
 import Layout from '../components/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
+import Action from '../components/Action.astro';
+import Heading from '../components/Heading.astro';
+import FormField from '../components/forms/FormField.astro';
+import FormHeading from '../components/forms/FormHeading.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import WizardProgress from '../components/forms/WizardProgress.astro';
+import SacramentOption from '../components/forms/SacramentOption.astro';
 import { getAllContent } from '../lib/db.js';
 const { settings, sacramentos } = getAllContent();
 const selected = Astro.url.searchParams.get('para') || '';
@@ -29,140 +36,100 @@ const selected = Astro.url.searchParams.get('para') || '';
             </div>
           </div>
         )}
-        <div class="form-heading">
-          <p class="eyebrow">
-            <span class="eyebrow-line"></span> FORMULARIO DE SOLICITUD
-          </p>
-          <h2>
+        <FormHeading eyebrow="FORMULARIO DE SOLICITUD">
+          <Fragment slot="title">
             Empecemos <em>este camino.</em>
-          </h2>
-          <p>
-            Este formulario es una preinscripción, no una reserva de fecha ni
-            confirmación del sacramento.
-          </p>
-        </div>
-        <div class="wizard-progress" aria-label="Progreso">
-          <div class="wizard-marker current" data-step-indicator="1">
-            <span>1</span>
-            <small>Sacramento</small>
-          </div>
-          <div class="wizard-connector"></div>
-          <div class="wizard-marker" data-step-indicator="2">
-            <span>2</span>
-            <small>Datos personales</small>
-          </div>
-          <div class="wizard-connector"></div>
-          <div class="wizard-marker" data-step-indicator="3">
-            <span>3</span>
-            <small>Confirmar</small>
-          </div>
-        </div>
+          </Fragment>
+          Este formulario es una preinscripción, no una reserva de fecha ni
+          confirmación del sacramento.
+        </FormHeading>
+        <WizardProgress
+          steps={['Sacramento', 'Datos personales', 'Confirmar']}
+        />
         <form id="register-form" class="form-card" novalidate>
           <section class="form-step" data-step="1">
-            <h3>¿Qué sacramento deseas solicitar?</h3>
+            <Heading as="h3">¿Qué sacramento deseas solicitar?</Heading>
             <p class="field-intro">
               Selecciona el sacramento para el cual quieres recibir orientación.
             </p>
             <div class="sacrament-options">
               {sacramentos.map((s) => (
-                <label class="option-card">
-                  <input
-                    type="radio"
-                    name="sacrament"
-                    value={s.id}
-                    checked={s.id === selected}
-                    disabled={!s.open}
-                    required
-                  />
-                  <span class="option-symbol">
-                    <Icon name={s.icon} size={27} />
-                  </span>
-                  <span>
-                    <strong>{s.title}</strong>
-                    <small>{s.open ? s.tag : 'No disponible'}</small>
-                  </span>
-                  <Icon name="check-circle" class="option-check" size={22} />
-                </label>
+                <SacramentOption sacrament={s} selected={selected} />
               ))}
             </div>
           </section>
           <section class="form-step" data-step="2" hidden>
-            <h3>Cuéntanos un poco de ti</h3>
+            <Heading as="h3">Cuéntanos un poco de ti</Heading>
             <p class="field-intro">
               Solo solicitamos datos básicos para que la secretaría pueda
               comunicarse.
             </p>
             <div class="fields-grid">
-              <label class="field full">
-                Nombre completo de quien recibirá el sacramento <span>*</span>
-                <input
-                  name="name"
-                  autocomplete="name"
-                  placeholder="Nombres y apellidos"
-                  minlength="5"
-                  maxlength="120"
-                  required
-                />
-              </label>
-              <label class="field">
-                Edad <span>*</span>
-                <input
-                  type="number"
-                  name="age"
-                  inputmode="numeric"
-                  placeholder="Ej. 12"
-                  min="0"
-                  max="110"
-                  required
-                />
-              </label>
-              <label class="field">
-                Teléfono de contacto <span>*</span>
-                <input
-                  name="phone"
-                  type="tel"
-                  autocomplete="tel"
-                  inputmode="tel"
-                  placeholder="Ej. 71234567"
-                  minlength="7"
-                  maxlength="20"
-                  required
-                />
-              </label>
-              <label class="field full">
-                Nombre del padre, madre, tutor o responsable <span>*</span>
-                <input
-                  name="guardian"
-                  autocomplete="off"
-                  placeholder="Nombres y apellidos del responsable"
-                  minlength="5"
-                  maxlength="120"
-                  required
-                />
-              </label>
-              <label class="field full">
-                Correo electrónico <small>(opcional)</small>
-                <input
-                  name="email"
-                  type="email"
-                  autocomplete="email"
-                  placeholder="correo@ejemplo.com"
-                  maxlength="120"
-                />
-              </label>
-              <label class="field full">
-                Consulta o comentario <small>(opcional)</small>
-                <textarea
-                  name="notes"
-                  rows="3"
-                  maxlength="800"
-                  placeholder="¿Hay algo importante que debamos conocer?"
-                ></textarea>
-              </label>
+              <FormField
+                label="Nombre completo de quien recibirá el sacramento"
+                full
+                name="name"
+                autocomplete="name"
+                placeholder="Nombres y apellidos"
+                minlength="5"
+                maxlength="120"
+                required
+              />
+              <FormField
+                label="Edad"
+                type="number"
+                name="age"
+                inputmode="numeric"
+                placeholder="Ej. 12"
+                min="0"
+                max="110"
+                required
+              />
+              <FormField
+                label="Teléfono de contacto"
+                name="phone"
+                type="tel"
+                autocomplete="tel"
+                inputmode="tel"
+                placeholder="Ej. 71234567"
+                minlength="7"
+                maxlength="20"
+                required
+              />
+              <FormField
+                label="Nombre del padre, madre, tutor o responsable"
+                full
+                name="guardian"
+                autocomplete="off"
+                placeholder="Nombres y apellidos del responsable"
+                minlength="5"
+                maxlength="120"
+                required
+              />
+              <FormField
+                label="Correo electrónico"
+                full
+                optional
+                name="email"
+                type="email"
+                autocomplete="email"
+                placeholder="correo@ejemplo.com"
+                maxlength="120"
+              />
+              <FormField
+                label="Consulta o comentario"
+                full
+                optional
+                multiline
+                name="notes"
+                rows="3"
+                maxlength="800"
+                placeholder="¿Hay algo importante que debamos conocer?"
+              />
             </div>
           </section>
           <section class="form-step" data-step="3" hidden>
-            <h3>Revisa y confirma</h3>
+            <Heading as="h3">Revisa y confirma</Heading>
             <p class="field-intro">
               Verifica que los datos sean correctos antes de enviar tu
               solicitud.
@@ -174,14 +141,14 @@ const selected = Astro.url.searchParams.get('para') || '';
                 Autorizo a la parroquia a utilizar estos datos exclusivamente
                 para gestionar mi solicitud y contactarme sobre la preparación
                 sacramental. Soy mayor de edad o responsable del participante.{' '}
-                <a
+                <Action
                   href="/privacidad"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="privacy-link"
                 >
                   Leer información de privacidad
-                </a>
+                </Action>
                 . <strong>*</strong>
               </span>
             </label>
@@ -196,18 +163,18 @@ const selected = Astro.url.searchParams.get('para') || '';
           </section>
           <p class="form-feedback" id="form-feedback" role="alert" hidden></p>
           <div class="form-navigation">
-            <button
+            <Action
               type="button"
               class="btn btn-secondary"
               id="previous-step"
               hidden
             >
               <Icon name="arrow-left" size={17} /> Anterior
-            </button>
-            <button type="button" class="btn btn-primary" id="next-step">
+            </Action>
+            <Action type="button" class="btn btn-primary" id="next-step">
               Continuar <Icon name="arrow" size={17} />
-            </button>
-            <button
+            </Action>
+            <Action
               type="submit"
               class="btn btn-primary"
               id="submit-registration"
@@ -215,31 +182,31 @@ const selected = Astro.url.searchParams.get('para') || '';
               disabled={!settings.registrationOpen}
             >
               Enviar solicitud <Icon name="arrow-up-right" size={17} />
-            </button>
+            </Action>
           </div>
         </form>
         <div class="success-card" id="success-card" hidden>
           <span class="success-icon">
             <Icon name="check-circle" size={52} />
           </span>
-          <p class="eyebrow">SOLICITUD RECIBIDA</p>
-          <h2>
+          <Eyebrow>SOLICITUD RECIBIDA</Eyebrow>
+          <Heading as="h2">
             ¡Ya diste el <em>primer paso!</em>
-          </h2>
+          </Heading>
           <p>
             Guarda el siguiente código y el teléfono que registraste para
             consultar tu estado.
           </p>
           <div class="receipt-code" id="receipt-code"></div>
-          <button type="button" class="copy-button" id="copy-code">
+          <Action type="button" class="copy-button" id="copy-code">
             Copiar código <Icon name="file-text" size={17} />
-          </button>
+          </Action>
           <p class="fine-print">
             Este comprobante no confirma una plaza ni una fecha de celebración.
           </p>
-          <a href="/consultar" class="btn btn-primary">
+          <Action href="/consultar" class="btn btn-primary">
             Consultar estado <Icon name="arrow-up-right" size={17} />
-          </a>
+          </Action>
         </div>
       </div>
       <aside class="registration-aside" data-reveal>
@@ -247,7 +214,7 @@ const selected = Astro.url.searchParams.get('para') || '';
           <div class="help-icon">
             <Icon name="shield-check" size={29} />
           </div>
-          <h3>Estamos contigo en cada paso.</h3>
+          <Heading as="h3">Estamos contigo en cada paso.</Heading>
           <p>
             Tus datos se usarán para organizar tu preinscripción. La preparación
             y los documentos serán validados por la parroquia.
@@ -265,11 +232,11 @@ const selected = Astro.url.searchParams.get('para') || '';
         </div>
         <div class="registration-questions">
           <Icon name="circle-help" size={24} />
-          <h4>¿Prefieres hablar directamente?</h4>
+          <Heading as="h4">¿Prefieres hablar directamente?</Heading>
           <p>La secretaría podrá orientarte sobre fechas y documentos.</p>
-          <a href="/contacto">
+          <Action href="/contacto">
             Ver cómo contactarnos <Icon name="arrow-up-right" size={17} />
-          </a>
+          </Action>
         </div>
       </aside>
     </div>
@@ -281,116 +248,155 @@ const selected = Astro.url.searchParams.get('para') || '';
     const previous = document.getElementById('previous-step');
     const submit = document.getElementById('submit-registration');
     const feedback = document.getElementById('form-feedback');
-    function showError(m) {
-      feedback.textContent = m;
-      feedback.hidden = false;
-    }
-    function clearError() {
-      feedback.hidden = true;
-      feedback.textContent = '';
-    }
-    function validStep() {
-      const section = form.querySelector(`[data-step="${current}"]`);
-      const fields = [
-        ...section.querySelectorAll('input:not(.honeypot),textarea'),
-      ];
-      if (
-        current === 1 &&
-        !form.querySelector('input[name="sacrament"]:checked')
-      ) {
-        showError('Selecciona un sacramento para continuar.');
-        return false;
+    if (
+      form instanceof HTMLFormElement &&
+      submit instanceof HTMLButtonElement
+    ) {
+      function showError(m) {
+        feedback.textContent = m;
+        feedback.hidden = false;
       }
-      for (const input of fields)
-        if (!input.checkValidity()) {
-          input.reportValidity();
+      function clearError() {
+        feedback.hidden = true;
+        feedback.textContent = '';
+      }
+      function validStep() {
+        const section = form.querySelector(`[data-step="${current}"]`);
+        const fields = [
+          ...section.querySelectorAll('input:not(.honeypot),textarea'),
+        ];
+        if (
+          current === 1 &&
+          !form.querySelector('input[name="sacrament"]:checked')
+        ) {
+          showError('Selecciona un sacramento para continuar.');
           return false;
         }
-      return true;
-    }
-    function changeStep(step) {
-      current = step;
-      clearError();
-      document
-        .querySelectorAll('.form-step')
-        .forEach((x) => (x.hidden = Number(x.dataset.step) !== current));
-      document.querySelectorAll('[data-step-indicator]').forEach((x) => {
-        let n = Number(x.dataset.stepIndicator);
-        x.classList.toggle('current', n === current);
-        x.classList.toggle('finished', n < current);
-      });
-      previous.hidden = current === 1;
-      next.hidden = current === 3;
-      submit.hidden = current !== 3;
-      if (current === 3) {
-        const f = new FormData(form),
-          s = form.querySelector('input[name="sacrament"]:checked');
-        document.getElementById('review-box').innerHTML = '';
-        const rows = [
-          [
-            'Sacramento',
-            s?.closest('label')?.querySelector('strong')?.textContent || '',
-          ],
-          ['Participante', f.get('name')],
-          ['Edad', f.get('age') + ' años'],
-          ['Responsable', f.get('guardian')],
-          ['Teléfono', f.get('phone')],
-          ['Correo', f.get('email') || 'No indicado'],
-        ];
-        const box = document.getElementById('review-box');
-        for (const [a, b] of rows) {
-          const row = document.createElement('div');
-          const name = document.createElement('span');
-          const value = document.createElement('strong');
-          name.textContent = a;
-          value.textContent = String(b);
-          row.append(name, value);
-          box.append(row);
+        for (const input of fields)
+          if (
+            (input instanceof HTMLInputElement ||
+              input instanceof HTMLTextAreaElement) &&
+            !input.checkValidity()
+          ) {
+            input.reportValidity();
+            return false;
+          }
+        return true;
+      }
+      function changeStep(step, moveFocus = true) {
+        if (!(form instanceof HTMLFormElement)) return;
+        current = step;
+        clearError();
+        document.querySelectorAll('.form-step').forEach((x) => {
+          if (x instanceof HTMLElement)
+            x.hidden = Number(x.dataset.step) !== current;
+        });
+        document.querySelectorAll('[data-step-indicator]').forEach((x) => {
+          if (!(x instanceof HTMLElement)) return;
+          let n = Number(x.dataset.stepIndicator);
+          x.classList.toggle('current', n === current);
+          x.classList.toggle('finished', n < current);
+          if (n === current) x.setAttribute('aria-current', 'step');
+          else x.removeAttribute('aria-current');
+        });
+        previous.hidden = current === 1;
+        next.hidden = current === 3;
+        submit.hidden = current !== 3;
+        if (moveFocus) {
+          const heading = form.querySelector(`[data-step="${current}"] h3`);
+          if (heading instanceof HTMLElement) {
+            heading.tabIndex = -1;
+            heading.focus({ preventScroll: true });
+            heading.scrollIntoView({ block: 'start', behavior: 'instant' });
+          }
+        }
+        if (current === 3) {
+          const f = new FormData(form),
+            s = form.querySelector('input[name="sacrament"]:checked');
+          document.getElementById('review-box').innerHTML = '';
+          const rows = [
+            [
+              'Sacramento',
+              s?.closest('label')?.querySelector('strong')?.textContent || '',
+            ],
+            ['Participante', f.get('name')],
+            ['Edad', f.get('age') + ' años'],
+            ['Responsable', f.get('guardian')],
+            ['Teléfono', f.get('phone')],
+            ['Correo', f.get('email') || 'No indicado'],
+          ];
+          const box = document.getElementById('review-box');
+          for (const [a, b] of rows) {
+            const row = document.createElement('div');
+            const name = document.createElement('span');
+            const value = document.createElement('strong');
+            name.textContent = String(a);
+            value.textContent = String(b);
+            row.append(name, value);
+            box.append(row);
+          }
         }
       }
-    }
-    next.addEventListener('click', () => {
-      clearError();
-      if (validStep()) changeStep(current + 1);
-    });
-    previous.addEventListener('click', () => changeStep(current - 1));
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      clearError();
-      if (!validStep()) return;
-      const f = new FormData(form);
-      const body = Object.fromEntries(f.entries());
-      body.consent = form.elements.consent.checked;
-      submit.disabled = true;
-      submit.textContent = 'Enviando...';
-      try {
-        const res = await fetch('/api/inscripciones', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        });
-        const data = await res.json();
-        if (!res.ok) throw Error(data.error || 'Error al enviar');
-        document.getElementById('receipt-code').textContent = data.code;
-        form.hidden = true;
-        document.querySelector('.wizard-progress').hidden = true;
-        document.getElementById('success-card').hidden = false;
-        document
-          .getElementById('copy-code')
-          .addEventListener('click', async () => {
-            await navigator.clipboard.writeText(data.code);
-            document.getElementById('copy-code').textContent = '¡Copiado!';
+      next.addEventListener('click', () => {
+        clearError();
+        if (validStep()) changeStep(current + 1);
+      });
+      previous.addEventListener('click', () => changeStep(current - 1));
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearError();
+        if (current < 3) {
+          if (validStep()) changeStep(current + 1);
+          return;
+        }
+        if (submit.disabled || !validStep()) return;
+        const f = new FormData(form);
+        const consent = form.elements.namedItem('consent');
+        const body = {
+          ...Object.fromEntries(f.entries()),
+          consent: consent instanceof HTMLInputElement && consent.checked,
+        };
+        submit.disabled = true;
+        submit.textContent = 'Enviando...';
+        try {
+          const res = await fetch('/api/inscripciones', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
           });
-        document
-          .querySelector('.success-card')
-          .scrollIntoView({ behavior: 'smooth', block: 'center' });
-      } catch (err) {
-        showError(err.message);
-      } finally {
-        submit.disabled = false;
-        submit.textContent = 'Enviar solicitud ↗';
-      }
-    });
-    changeStep(1);
+          const data = await res.json();
+          if (!res.ok) throw Error(data.error || 'Error al enviar');
+          document.getElementById('receipt-code').textContent = data.code;
+          form.hidden = true;
+          const progress = document.querySelector('.wizard-progress');
+          if (progress instanceof HTMLElement) progress.hidden = true;
+          document.getElementById('success-card').hidden = false;
+          document
+            .getElementById('copy-code')
+            .addEventListener('click', async () => {
+              const button = document.getElementById('copy-code');
+              try {
+                await navigator.clipboard.writeText(data.code);
+                button.textContent = '¡Copiado!';
+              } catch {
+                button.textContent =
+                  'No se pudo copiar. Guarda el código mostrado arriba.';
+              }
+            });
+          document.querySelector('.success-card').scrollIntoView({
+            behavior: matchMedia('(prefers-reduced-motion: reduce)').matches
+              ? 'instant'
+              : 'smooth',
+            block: 'center',
+          });
+        } catch (err) {
+          showError(err.message);
+        } finally {
+          submit.disabled = false;
+          submit.textContent = 'Enviar solicitud ↗';
+        }
+      });
+      changeStep(1, false);
+    }
   </script>
 </Layout>

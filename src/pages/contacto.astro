@@ -1,4 +1,9 @@
 ---
+import ContactItem from '../components/ContactItem.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Heading from '../components/Heading.astro';
+import Action from '../components/Action.astro';
+import Image from '../components/Image.astro';
 import Layout from '../components/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
@@ -18,75 +23,57 @@ const mapLink =
   <section class="section">
     <div class="container contact-grid">
       <div data-reveal>
-        <p class="eyebrow">
-          <span class="eyebrow-line"></span> VISÍTANOS
-        </p>
-        <h2>
+        <Eyebrow line>VISÍTANOS</Eyebrow>
+        <Heading as="h2">
           Siempre hay <em>un lugar para ti.</em>
-        </h2>
+        </Heading>
         <p class="long-copy">{settings.about}</p>
         <div class="contact-items">
-          <div>
-            <span>
-              <Icon name="pin" size={24} />
-            </span>
-            <div>
-              <h3>Encuéntranos</h3>
-              <p>{settings.address}</p>
-            </div>
-          </div>
-          <div>
-            <span>
-              <Icon name="phone" size={24} />
-            </span>
-            <div>
-              <h3>Llámanos</h3>
-              <p>{settings.phone}</p>
-            </div>
-          </div>
-          <div>
-            <span>
-              <Icon name="clock" size={24} />
-            </span>
-            <div>
-              <h3>Atención en secretaría</h3>
-              <p>{settings.officeHours}</p>
-            </div>
-          </div>
+          <ContactItem
+            icon="pin"
+            title="Encuéntranos"
+            description={settings.address}
+          />
+          <ContactItem
+            icon="phone"
+            title="Llámanos"
+            description={settings.phone}
+          />
+          <ContactItem
+            icon="clock"
+            title="Atención en secretaría"
+            description={settings.officeHours}
+          />
           {settings.email && (
-            <div>
-              <span>
-                <Icon name="mail" size={24} />
-              </span>
-              <div>
-                <h3>Correo electrónico</h3>
-                <p>{settings.email}</p>
-              </div>
-            </div>
+            <ContactItem
+              icon="mail"
+              title="Correo electrónico"
+              description={settings.email}
+            />
           )}
         </div>
         <div class="contact-action-row">
-          <a
+          <Action
             class="btn btn-primary"
             href={settings.facebook}
             target="_blank"
             rel="noopener noreferrer"
           >
             Escríbenos en Facebook <Icon name="arrow-up-right" size={17} />
-          </a>
-          <a
+          </Action>
+          <Action
             class="btn btn-secondary"
             href={mapLink}
             target="_blank"
             rel="noopener noreferrer"
           >
             Cómo llegar <Icon name="pin" size={17} />
-          </a>
+          </Action>
         </div>
       </div>
       <div class="contact-visual" data-reveal>
         <span class="contact-visual-label">MUNAYPATA · LA PAZ</span>
-        <img src="/templo-ilustracion.svg" alt="Ilustración de un templo" />
+        <Image src="/templo-ilustracion.svg" alt="Ilustración de un templo" />
         <div class="contact-visual-bottom">
           <span>✳</span>
           <strong>Te esperamos con los brazos abiertos.</strong>

@@ -3,5 +3,7 @@ dist/
 .astro/
 data/
 bun.lock
+# Keep the development rules exactly as provided.
+AGENTS.md
 .env
 .env.*

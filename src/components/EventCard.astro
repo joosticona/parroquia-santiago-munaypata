@@ -1,0 +1,21 @@
+---
+import Icon from './Icon.astro';
+import Heading from './Heading.astro';
+const { event: e } = Astro.props;
+---
+
+<article class="event-card" data-reveal>
+  <span class="event-icon">
+    <Icon name="calendar" size={25} />
+  </span>
+  <div>
+    <small>
+      {e.date || 'Fecha por confirmar'} · {e.time || 'Horario por confirmar'}
+    </small>
+    <Heading as="h3">{e.title}</Heading>
+    <p>{e.description}</p>
+    <span class="event-place">
+      <Icon name="pin" size={15} /> {e.place || 'Parroquia'}
+    </span>
+  </div>
+</article>

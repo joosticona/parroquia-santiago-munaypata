@@ -1,4 +1,8 @@
 ---
+import Action from '../../components/Action.astro';
+import Heading from '../../components/Heading.astro';
+import Image from '../../components/Image.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
 import Layout from '../../components/Layout.astro';
 import Icon from '../../components/Icon.astro';
 import { getContent } from '../../lib/db.js';
@@ -9,17 +13,18 @@ const configured = authConfigured();
 ---
 
 <Layout settings={settings} title="Acceso administrativo" hideChrome={true}>
+  <link rel="stylesheet" href="/admin/admin.css" />
   <section class="login-shell">
     <div class="login-decoration">
       <a class="login-back" href="/">
         <Icon name="arrow-left" size={17} /> Volver al sitio
       </a>
       <div class="login-decoration-center">
-        <img src="/emblema.svg" alt="" width="74" height="74" />
+        <Image src="/emblema.svg" alt="" width="74" height="74" />
         <p>PARROQUIA APÓSTOL SANTIAGO</p>
-        <h1>
+        <Heading as="h1">
           Servir también <em>es organizar.</em>
-        </h1>
+        </Heading>
         <span>Un espacio para cuidar y acompañar a nuestra comunidad.</span>
       </div>
       <span class="login-watermark">✳</span>
@@ -29,10 +34,10 @@ const configured = authConfigured();
         <span class="login-form-icon">
           <Icon name="lock" size={26} />
         </span>
-        <p class="eyebrow">CENTRO DE CONTROL</p>
-        <h2>
+        <Eyebrow>CENTRO DE CONTROL</Eyebrow>
+        <Heading as="h2">
           Bienvenido <em>de nuevo.</em>
-        </h2>
+        </Heading>
         <p>Accede para gestionar inscripciones, horarios y publicaciones.</p>
         {!configured && (
           <div class="form-alert">
@@ -52,17 +57,18 @@ const configured = authConfigured();
               name="password"
               placeholder="Ingresa tu contraseña"
               autocomplete="current-password"
+              aria-describedby="login-error"
               required
             />
           </label>
           <div id="login-error" class="form-feedback" hidden role="alert"></div>
-          <button
+          <Action
             type="submit"
             class="btn btn-primary full-btn"
             disabled={!configured}
           >
             Entrar al panel <Icon name="arrow" size={18} />
-          </button>
+          </Action>
         </form>
         <a class="login-return" href="/">
           ← Ir al sitio público
@@ -71,20 +77,26 @@ const configured = authConfigured();
     </div>
   </section>
   <script>
-    document
-      .getElementById('login-form')
-      ?.addEventListener('submit', async (e) => {
+    const form = document.getElementById('login-form');
+    if (form instanceof HTMLFormElement)
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const form = e.target,
-          button = form.querySelector('button'),
+        const button = form.querySelector('button'),
           error = document.getElementById('login-error');
+        if (button.disabled) return;
         error.hidden = true;
+        document
+          .getElementById('admin-password')
+          .removeAttribute('aria-invalid');
+        form.setAttribute('aria-busy', 'true');
         button.disabled = true;
         try {
           const r = await fetch('/api/admin/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password: form.password.value }),
+            body: JSON.stringify({
+              password: new FormData(form).get('password'),
+            }),
           });
           const data = await r.json();
           if (!r.ok) throw Error(data.error || 'No se pudo iniciar sesión');
@@ -93,6 +105,11 @@ const configured = authConfigured();
           error.textContent = err.message;
           error.hidden = false;
           button.disabled = false;
+          const password = document.getElementById('admin-password');
+          password.setAttribute('aria-invalid', 'true');
+          password.focus();
+        } finally {
+          form.setAttribute('aria-busy', 'false');
         }
       });
   </script>

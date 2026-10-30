@@ -1,0 +1,21 @@
+---
+import Icon from './Icon.astro';
+import Heading from './Heading.astro';
+const { schedule: h, index: i = 0 } = Astro.props;
+---
+
+<article class="time-card" data-reveal style={`--stagger:${i * 70}ms`}>
+  <div class="time-card-top">
+    <span>
+      <Icon name="clock" size={21} />
+    </span>
+    <small>{h.type}</small>
+  </div>
+  <Heading as="h3">{h.title}</Heading>
+  <p class="time-emphasis">{h.day}</p>
+  <strong>{h.time}</strong>
+  <p class="time-place">
+    <Icon name="pin" size={15} /> {h.place}
+  </p>
+  {h.note && <p class="time-note">{h.note}</p>}
+</article>

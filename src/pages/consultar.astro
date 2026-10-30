@@ -2,6 +2,10 @@
 import Layout from '../components/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
+import Action from '../components/Action.astro';
+import Heading from '../components/Heading.astro';
+import FormField from '../components/forms/FormField.astro';
+import FormHeading from '../components/forms/FormHeading.astro';
 import { getContent } from '../lib/db.js';
 const settings = getContent('settings');
 ---
@@ -15,48 +19,47 @@ const settings = getContent('settings');
   <section class="section status-section">
     <div class="container status-layout">
       <div class="status-main" data-reveal>
-        <div class="form-heading">
-          <p class="eyebrow">
-            <span class="eyebrow-line"></span> SEGUIMIENTO
-          </p>
-          <h2>
+        <FormHeading eyebrow="SEGUIMIENTO">
+          <Fragment slot="title">
             ¿Cómo va <em>mi solicitud?</em>
-          </h2>
-          <p>
-            Tu código tiene el formato STG-XXXXXXXXXXXXXXXX. Está en el
-            comprobante de preinscripción.
-          </p>
-        </div>
+          </Fragment>
+          Tu código tiene el formato STG-XXXXXXXXXXXXXXXX. Está en el
+          comprobante de preinscripción.
+        </FormHeading>
         <form id="status-form" class="form-card">
           <div class="fields-grid">
-            <label class="field full">
-              Código de solicitud <span>*</span>
-              <input
-                name="code"
-                placeholder="STG-XXXXXXXX..."
-                maxlength="32"
-                required
-              />
-            </label>
-            <label class="field full">
-              Teléfono que registraste <span>*</span>
-              <input
-                name="phone"
-                type="tel"
-                inputmode="tel"
-                placeholder="Tu teléfono de contacto"
-                required
-              />
-            </label>
+            <FormField
+              label="Código de solicitud"
+              full
+              name="code"
+              placeholder="STG-XXXXXXXX..."
+              maxlength="32"
+              required
+            />
+            <FormField
+              label="Teléfono que registraste"
+              full
+              name="phone"
+              type="tel"
+              inputmode="tel"
+              placeholder="Tu teléfono de contacto"
+              required
+            />
           </div>
           <p id="status-feedback" class="form-feedback" hidden role="alert"></p>
-          <button class="btn btn-primary" type="submit">
+          <Action class="btn btn-primary" type="submit">
             Consultar estado <Icon name="search" size={18} />
-          </button>
+          </Action>
         </form>
-        <div class="status-result" id="status-result" hidden>
+        <div
+          class="status-result"
+          id="status-result"
+          role="status"
+          tabindex="-1"
+          hidden
+        >
           <span class="pill">RESULTADO DE TU CONSULTA</span>
-          <h3 id="status-name"></h3>
+          <Heading as="h3" id="status-name" />
           <strong id="status-value"></strong>
           <p id="status-updated"></p>
           <p>
@@ -67,55 +70,63 @@ const settings = getContent('settings');
       <aside class="registration-aside" data-reveal>
         <div class="registration-help">
           <Icon name="shield-check" size={35} />
-          <h3>Tu información es privada.</h3>
+          <Heading as="h3">Tu información es privada.</Heading>
           <p>
             Solicitamos tu código y teléfono para que solo quien tenga ambos
             pueda consultar el estado. No se muestran datos personales en la
             respuesta.
           </p>
           <hr />
-          <a href="/contacto" class="text-link">
+          <Action href="/contacto" class="text-link">
             ¿Necesitas ayuda? <Icon name="arrow-up-right" size={16} />
-          </a>
+          </Action>
         </div>
       </aside>
     </div>
   </section>
   <script>
     const form = document.getElementById('status-form');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const b = Object.fromEntries(new FormData(form));
-      const f = document.getElementById('status-feedback'),
-        result = document.getElementById('status-result');
-      f.hidden = true;
-      result.hidden = true;
-      const button = form.querySelector('button');
-      button.disabled = true;
-      try {
-        const r = await fetch('/api/estado', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(b),
-          }),
-          data = await r.json();
-        if (!r.ok)
-          throw Error(data.error || 'No pudimos consultar tu solicitud');
-        document.getElementById('status-name').textContent =
-          data.sacrament.replaceAll('-', ' ');
-        document.getElementById('status-value').textContent = data.status;
-        document.getElementById('status-updated').textContent =
-          'Última actualización: ' +
-          new Date(data.updated).toLocaleDateString('es-BO', {
-            dateStyle: 'long',
-          });
-        result.hidden = false;
-      } catch (err) {
-        f.textContent = err.message;
-        f.hidden = false;
-      } finally {
-        button.disabled = false;
-      }
-    });
+    if (form instanceof HTMLFormElement)
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const b = Object.fromEntries(new FormData(form));
+        const f = document.getElementById('status-feedback'),
+          result = document.getElementById('status-result');
+        f.hidden = true;
+        result.hidden = true;
+        const button = form.querySelector('button');
+        button.disabled = true;
+        const buttonContent = button.innerHTML;
+        button.textContent = 'Consultando...';
+        form.setAttribute('aria-busy', 'true');
+        try {
+          const r = await fetch('/api/estado', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(b),
+            }),
+            data = await r.json();
+          if (!r.ok)
+            throw Error(data.error || 'No pudimos consultar tu solicitud');
+          document.getElementById('status-name').textContent =
+            data.sacrament.replaceAll('-', ' ');
+          document.getElementById('status-value').textContent = data.status;
+          document.getElementById('status-updated').textContent =
+            'Última actualización: ' +
+            new Date(data.updated).toLocaleDateString('es-BO', {
+              dateStyle: 'long',
+            });
+          result.hidden = false;
+          result.focus({ preventScroll: true });
+          result.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+        } catch (err) {
+          f.textContent = err.message;
+          f.hidden = false;
+        } finally {
+          button.disabled = false;
+          button.innerHTML = buttonContent;
+          form.removeAttribute('aria-busy');
+        }
+      });
   </script>
 </Layout>

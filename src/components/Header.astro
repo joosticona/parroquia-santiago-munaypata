@@ -1,4 +1,6 @@
 ---
+import Action from './Action.astro';
+import Image from './Image.astro';
 import Icon from './Icon.astro';
 const { settings, pathname = '/' } = Astro.props;
 const links = [
@@ -22,8 +24,12 @@ const links = [
 </div>
 <header class="site-header" id="site-header">
   <nav class="container navbar" aria-label="Navegación principal">
-    <a class="brand" href="/" aria-label="Parroquia Apóstol Santiago, inicio">
-      <img
+    <Action
+      class="brand"
+      href="/"
+      aria-label="Parroquia Apóstol Santiago, inicio"
+    >
+      <Image
         src={settings.logo || '/emblema.svg'}
         alt="Emblema parroquial"
         width="49"
@@ -33,10 +39,10 @@ const links = [
         <strong>{settings.name}</strong>
         <small>{settings.subtitle}</small>
       </span>
-    </a>
+    </Action>
     <div class="nav-links" id="main-menu">
       {links.map(([href, label]) => (
-        <a
+        <Action
           class:list={[
             'nav-link',
             {
@@ -45,15 +51,20 @@ const links = [
             },
           ]}
           href={href}
+          aria-current={
+            (href === '/' ? pathname === '/' : pathname.startsWith(href))
+              ? 'page'
+              : undefined
+          }
         >
           {label}
-        </a>
+        </Action>
       ))}
-      <a class="nav-cta" href="/inscripcion">
+      <Action class="nav-cta" href="/inscripcion">
         Preinscribirme <Icon name="arrow-up-right" size={16} />
-      </a>
+      </Action>
     </div>
-    <button
+    <Action
       class="menu-toggle"
       id="menu-toggle"
       aria-label="Abrir menú"
@@ -61,6 +72,6 @@ const links = [
       aria-controls="main-menu"
     >
       <Icon name="menu" size={25} />
-    </button>
+    </Action>
   </nav>
 </header>

@@ -16,7 +16,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "test": "bun scripts/smoke-test.mjs && bun scripts/api-smoke-test.mjs"
+    "test": "bun scripts/smoke-test.mjs && bun scripts/api-smoke-test.mjs && bun scripts/ui-components-test.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.9",

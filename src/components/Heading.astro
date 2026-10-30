@@ -1,0 +1,7 @@
+---
+const { as: Tag = 'h2', ...attributes } = Astro.props;
+---
+
+<Tag {...attributes}>
+  <slot />
+</Tag>

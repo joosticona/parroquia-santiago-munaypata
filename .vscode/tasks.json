@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Sitio parroquial: desarrollo",
+      "type": "shell",
+      "command": "bun",
+      "args": ["run", "dev", "--port", "4321"],
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Sitio parroquial: build",
+      "type": "shell",
+      "command": "bun",
+      "args": ["run", "build"],
+      "isBackground": false,
+      "problemMatcher": [],
+      "group": "build"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+---
+const { current = 1 } = Astro.props;
+/** @type {string[]} */
+const steps = Astro.props.steps;
+---
+
+<div class="wizard-progress" aria-label="Progreso">
+  {steps.map((label, index) => (
+    <>
+      {index > 0 && <div class="wizard-connector"></div>}
+      <div
+        class:list={['wizard-marker', { current: index + 1 === current }]}
+        data-step-indicator={index + 1}
+      >
+        <span>{index + 1}</span>
+        <small>{label}</small>
+      </div>
+    </>
+  ))}
+</div>

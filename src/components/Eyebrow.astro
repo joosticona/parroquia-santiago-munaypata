@@ -1,0 +1,8 @@
+---
+const { class: className = '', line = false, ...attributes } = Astro.props;
+---
+
+<p class:list={['eyebrow', className]} {...attributes}>
+  {line && <span class="eyebrow-line"></span>}
+  <slot />
+</p>

@@ -1,0 +1,23 @@
+---
+import Icon from './Icon.astro';
+import Action from './Action.astro';
+import Heading from './Heading.astro';
+const { notice: n, index: i = 0 } = Astro.props;
+---
+
+<article class="news-card" data-reveal style={`--stagger:${i * 90}ms`}>
+  <div
+    class="news-card-art"
+    style={n.image ? `background-image:url('${n.image}')` : ''}
+  >
+    <span class="news-visual-flower">✳</span>
+    <span class="news-label">{n.category || 'Comunidad'}</span>
+  </div>
+  <div class="news-card-body">
+    <Heading as="h3">{n.title}</Heading>
+    <p>{n.description}</p>
+    <Action href="/vida-parroquial">
+      Ver novedades <Icon name="arrow-up-right" size={16} />
+    </Action>
+  </div>
+</article>
